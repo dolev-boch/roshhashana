@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zuza-patisserie.vercel.app/sitemap.xml
