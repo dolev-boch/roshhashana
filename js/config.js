@@ -48,7 +48,18 @@ export const CONFIG = Object.freeze({
      * `default` משמש לכל יום שאין לו הגדרה משלו.
      */
     slots: {
-      default: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+      default: [
+        '09:00',
+        '10:00',
+        '11:00',
+        '12:00',
+        '13:00',
+        '14:00',
+        '15:00',
+        '16:00',
+        '17:00',
+        '18:00',
+      ],
       5: ['08:00', '09:00', '10:00', '11:00', '12:00'], // שישי
     },
     /** חריגות לתאריך מסוים - גובר על slots. ISO: YYYY-MM-DD */
@@ -75,7 +86,8 @@ export const CONFIG = Object.freeze({
      * הנחיות מלאות ב-google-apps-script/README.md
      * דוגמה: 'https://script.google.com/macros/s/AKfyc.../exec'
      */
-    endpoint: '',
+    endpoint:
+      'https://script.google.com/macros/s/AKfycbxnx-qS2B4ywIhJm7V7zh0ARRsGHTcfLI24aDNyD8INRSf0_rfBqQNEdxgtBnF7Y_4/exec',
 
     /** ל-mode: 'webhook' בלבד */
     webhookUrl: '',

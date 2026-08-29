@@ -28,11 +28,14 @@ const CONFIG = {
   SENDER_EMAIL: 'dolev.boch@gmail.com',
   SENDER_NAME: 'זוזה פטיסרי',
 
-  /** כתובת הלוגו במייל. חייבת להיות כתובת ציבורית ונגישה. */
-  LOGO_URL: 'https://zuza-patisserie.vercel.app/assets/images/logo.png',
+  /**
+   * כתובת הלוגו במייל. חייבת להיות כתובת ציבורית מלאה — לקוח דואר
+   * אינו יכול לטעון נתיב יחסי. אם תשנו דומיין, עדכנו כאן ובשורה שאחריה.
+   */
+  LOGO_URL: 'https://roshhashana.vercel.app/assets/images/logo.png',
 
   /** כתובת האתר, לקישור במיילים */
-  SITE_URL: 'https://zuza-patisserie.vercel.app',
+  SITE_URL: 'https://roshhashana.vercel.app',
 
   CAMPAIGN: 'ראש השנה 2026',
   CURRENCY: '₪',

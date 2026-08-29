@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zuza-patisserie.vercel.app/sitemap.xml
+Sitemap: https://roshhashana.vercel.app/sitemap.xml
