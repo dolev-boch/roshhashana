@@ -1,0 +1,256 @@
+/* ==========================================================================
+   base.css — איפוס, טיפוגרפיה ותיקוני דפדפנים ניידים
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%; /* Safari: מונע ניפוח טקסט בסיבוב מסך */
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent; /* מסיר ריבוע כחול בלחיצה */
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem; /* עוגן לא ייחבא מתחת לכותרת הדביקה */
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-normal);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  overscroll-behavior-y: none; /* מונע רענון-במשיכה מיותר בכרום אנדרואיד */
+}
+
+/* נעילת גלילה בזמן מודאל — טכניקה שעובדת גם ב-iOS Safari */
+body.is-locked {
+  position: fixed;
+  inset-inline: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  /* כותרות במשקל קל — ההיררכיה נבנית מגודל ומרווח, לא מהדגשה */
+  font-weight: 300;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+  letter-spacing: 0;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation; /* מבטל השהיית 300ms בנייד */
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+img {
+  border-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui);
+  font-size: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ספרות מיושרות לטבלה — מונע ריקוד של סכומים בזמן עדכון כמות */
+.tabular {
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* מספרים ומחירים תמיד משמאל לימין, גם בתוך משפט עברי */
+.ltr,
+[dir='ltr'] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ------------------------------------------------------------ נגישות -- */
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--sp-4);
+  top: -100px;
+  z-index: calc(var(--z-preloader) + 1);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--brand-forest);
+  color: var(--text-inverse);
+  border-radius: var(--radius);
+  transition: top var(--dur) var(--ease);
+}
+
+.skip-link:focus {
+  top: calc(var(--safe-top) + var(--sp-3));
+}
+
+[hidden] {
+  display: none !important;
+}
+
+[aria-disabled='true'],
+:disabled {
+  cursor: not-allowed;
+}
+
+/* כיבוד העדפת המשתמש להפחתת תנועה */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------- תיקוני דפדפני נייד -- */
+
+/* מונע זום אוטומטי בהתמקדות בשדה ב-iOS: גודל גופן חייב להיות ≥ 16px */
+input,
+select,
+textarea {
+  font-size: max(16px, var(--fs-base));
+}
+
+/* מסיר סגנון ברירת מחדל של iOS לשדות ולכפתורים */
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--radius);
+}
+
+/* משטח גלילה חלק בתוך אזורים נגללים ב-iOS */
+.scroll-y {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ניקוי כפתורי חיצים במספרים */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+::selection {
+  background: var(--brand-gold-200);
+  color: var(--brand-forest);
+}
+
+/* פס גלילה עדין בדסקטופ */
+@media (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border: 3px solid var(--surface);
+    border-radius: var(--radius-pill);
+  }
+}
+
+/* הדפסה */
+@media print {
+  .site-header,
+  .mobile-bar,
+  .preloader,
+  .drawer,
+  .modal,
+  .toast-stack {
+    display: none !important;
+  }
+}
