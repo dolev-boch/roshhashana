@@ -29,8 +29,6 @@ export function buildOrder(cart, customer, pickup) {
       phone: customer.phone,
       email: customer.email,
       notes: customer.notes || '',
-      /* הסכמה מפורשת לקבלת אישור ההזמנה במייל (חוק התקשורת, תיקון 40) */
-      emailConsent: Boolean(customer.emailConsent),
     },
     pickup: {
       date: pickupDate(),
@@ -159,38 +157,45 @@ export async function submitOrder(order) {
   const { mode } = CONFIG.submission;
 
   /*
-   * לפני שה-Apps Script נפרס אין endpoint. במצב כזה עדיף לעבור לוואטסאפ
-   * בשקט מאשר להציג ללקוח שגיאה — האתר עובד מהרגע הראשון,
-   * וההזמנות מתחילות להיכנס לגיליון ברגע שמדביקים את הכתובת בהגדרות.
+   * לפני שה-Apps Script נפרס אין endpoint, ואז ההזמנה נשלחת בוואטסאפ.
+   * במצב כזה ההזמנה אינה מגיעה לשום מקום עד שהלקוח לוחץ על הכפתור,
+   * ולכן היא מסומנת כ-requiresManualSend ומסך הסיום מציג כפתור שליחה.
+   * לאחר הגדרת ה-endpoint המצב הזה אינו קורה, והכפתור אינו מוצג.
    */
-  const effectiveMode =
-    (mode === 'sheets' || mode === 'both') && !CONFIG.submission.endpoint ? 'whatsapp' : mode;
+  const missingEndpoint = (mode === 'sheets' || mode === 'both') && !CONFIG.submission.endpoint;
+  const effectiveMode = missingEndpoint ? 'whatsapp' : mode;
 
   try {
     if (effectiveMode === 'sheets') {
       const result = await adapters.sheets(order);
-      // קישור הוואטסאפ נשמר כגיבוי ידני, גם כשהשליחה הצליחה
-      return { ok: true, channels: ['sheets'], confirmed: result.confirmed, fallback: adapters.whatsapp(order) };
+      // ההזמנה נשלחה. אין צורך בפעולה נוספת מהלקוח.
+      return {
+        ok: true,
+        channels: ['sheets'],
+        confirmed: result.confirmed,
+        requiresManualSend: false,
+      };
     }
 
     if (effectiveMode === 'webhook') {
       await adapters.webhook(order);
-      return { ok: true, channels: ['webhook'] };
+      return { ok: true, channels: ['webhook'], requiresManualSend: false };
     }
 
     if (effectiveMode === 'both') {
       await adapters.sheets(order);
-      return { ok: true, channels: ['sheets', 'whatsapp'], ...adapters.whatsapp(order) };
+      return { ok: true, channels: ['sheets'], requiresManualSend: false };
     }
 
-    // ברירת מחדל: וואטסאפ
-    return { ok: true, channels: ['whatsapp'], ...adapters.whatsapp(order) };
+    // וואטסאפ בלבד: ההזמנה תגיע רק אחרי שהלקוח ישלח אותה
+    return { ok: true, channels: ['whatsapp'], requiresManualSend: true, ...adapters.whatsapp(order) };
   } catch (error) {
     console.error('[order] submission failed', error);
     // גיבוי: גם אם השרת נכשל, הלקוח עדיין יכול לשלוח בוואטסאפ
     return {
       ok: false,
       error: 'לא הצלחנו לשלוח את ההזמנה אוטומטית',
+      requiresManualSend: true,
       fallback: adapters.whatsapp(order),
     };
   }

@@ -60,18 +60,7 @@ export function initCheckout({ onComplete } = {}) {
   let lastOrder = null;
 
   const state = {
-    customer: {
-      fullName: '',
-      phone: '',
-      email: '',
-      notes: '',
-      /*
-       * חוק התקשורת (תיקון 40) מחייב הסכמה מפורשת ומראש לפני משלוח דבר פרסומת.
-       * ברירת המחדל היא לא מסומן — הסכמה חייבת להיות פעולה אקטיבית של הלקוח.
-       * ללא סימון, המערכת לא תשלח מייל אישור ללקוח.
-       */
-      emailConsent: false,
-    },
+    customer: { fullName: '', phone: '', email: '', notes: '' },
     pickup: { branchId: null },
   };
 
@@ -157,32 +146,6 @@ export function initCheckout({ onComplete } = {}) {
     qs('.field__control', wrapper).removeAttribute('aria-invalid');
   }
 
-  /** תיבת הסכמה למשלוח אישור ההזמנה במייל */
-  function consentField() {
-    const input = el('input', {
-      class: 'checkbox__input',
-      id: 'f-emailConsent',
-      name: 'emailConsent',
-      type: 'checkbox',
-    });
-    input.checked = Boolean(state.customer.emailConsent);
-    input.addEventListener('change', () => {
-      state.customer.emailConsent = input.checked;
-    });
-
-    return el('label', { class: 'checkbox', for: 'f-emailConsent' }, [
-      input,
-      el('span', { class: 'checkbox__box', 'aria-hidden': 'true' }),
-      el('span', { class: 'checkbox__text' }, [
-        el('span', { class: 'checkbox__title', text: 'שלחו לי אישור הזמנה במייל' }),
-        el('span', {
-          class: 'checkbox__hint',
-          text: 'סיכום ההזמנה ומועד האיסוף יישלחו לכתובת שמילאתם. ללא סימון לא יישלח מייל.',
-        }),
-      ]),
-    ]);
-  }
-
   function renderDetails() {
     return el('div', { class: 'form-grid' }, [
       field({
@@ -208,6 +171,7 @@ export function initCheckout({ onComplete } = {}) {
           autocomplete: 'email',
           placeholder: 'name@example.com',
           ltr: true,
+          hint: 'אישור ההזמנה יישלח לכתובת זו',
         }),
       ]),
       field({
@@ -217,7 +181,6 @@ export function initCheckout({ onComplete } = {}) {
         textarea: true,
         placeholder: 'אלרגיות, בקשות מיוחדות או כיתוב על העוגה',
       }),
-      consentField(),
     ]);
   }
 
@@ -325,10 +288,6 @@ export function initCheckout({ onComplete } = {}) {
             el('dt', { text: 'מייל' }),
             el('dd', { class: 'ltr', text: state.customer.email }),
           ]),
-          el('div', { class: 'review__item' }, [
-            el('dt', { text: 'אישור במייל' }),
-            el('dd', { text: state.customer.emailConsent ? 'כן' : 'לא נדרש' }),
-          ]),
         ]),
       ]),
 
@@ -377,11 +336,10 @@ export function initCheckout({ onComplete } = {}) {
 
   /* --------------------------------------------------------- הצלחה -- */
 
-  /** נוסח ההסבר במסך ההצלחה, לפי ערוץ השליחה ומצב ההסכמה */
+  /** נוסח ההסבר במסך ההצלחה, לפי ערוץ השליחה */
   function successNote(result) {
-    if (!result?.ok) return 'לסיום, נא לשלוח לנו את סיכום ההזמנה בוואטסאפ.';
-    if (state.customer.emailConsent) return 'אישור עם פרטי ההזמנה נשלח לכתובת המייל שמילאתם.';
-    return 'ההזמנה נרשמה אצלנו. נשמח לראותכם בקונדיטוריה.';
+    if (result?.requiresManualSend) return 'לסיום, נא לשלוח לנו את ההזמנה בוואטסאפ.';
+    return 'אישור עם פרטי ההזמנה נשלח לכתובת המייל שמילאתם.';
   }
 
   function renderSuccess(order, result) {
@@ -418,13 +376,22 @@ export function initCheckout({ onComplete } = {}) {
       ),
     ]);
 
+    /*
+     * כפתור השליחה בוואטסאפ מוצג רק כשההזמנה טרם הגיעה אלינו —
+     * כשהשליחה נכשלה, או לפני שהוגדר endpoint. במסלול התקין ההזמנה
+     * כבר נרשמה והמייל נשלח, ולכן אין ללקוח מה לעשות והכפתור מיותר.
+     */
+    const manualSendUrl = result?.requiresManualSend
+      ? result.url || result.fallback?.url
+      : null;
+
     const actions = el('div', { class: 'success__actions' }, [
-      result?.url || result?.fallback?.url
+      manualSendUrl
         ? el('button', {
             class: 'btn btn--gold btn--lg',
             type: 'button',
-            on: { click: () => openWhatsApp(result.url || result.fallback.url) },
-            text: 'שליחת אישור בוואטסאפ',
+            on: { click: () => openWhatsApp(manualSendUrl) },
+            text: 'שליחת ההזמנה בוואטסאפ',
           })
         : null,
       el('button', {
@@ -595,8 +562,6 @@ export function initCheckout({ onComplete } = {}) {
 
     stepIndex = 0;
     state.pickup = { branchId: null };
-    // ההסכמה נדרשת מחדש בכל הזמנה — היא אינה נשמרת בין הזמנות
-    state.customer.emailConsent = false;
 
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');

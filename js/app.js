@@ -79,6 +79,49 @@ function guardLogos() {
   });
 }
 
+/* -------------------------------------------- הדגשת יעד קישור עוגן -- */
+
+/**
+ * קישור עוגן מגלגל את העמוד, אך לא תמיד ברור לאן. בטלפון היעד נוחת
+ * באמצע הפוטר, ופרטי הקשר נראים כמו עוד טקסט.
+ *
+ * לכן, אחרי המעבר, פרטי הטלפון והוואטסאפ מודגשים לזמן קצר.
+ * ההדגשה נמשכת גם כשהמשתמש מגיע לעמוד עם #contact בכתובת.
+ */
+function initAnchorHighlight() {
+  const HIGHLIGHT_MS = 2600;
+  let timer = null;
+
+  function flash() {
+    const targets = qsa('[data-highlight]');
+    if (targets.length === 0) return;
+
+    window.clearTimeout(timer);
+    targets.forEach((node) => node.classList.remove('is-flash'));
+
+    // הפעלה מחדש של האנימציה מחייבת reflow בין הסרה להוספה
+    void targets[0].offsetWidth;
+
+    targets.forEach((node) => node.classList.add('is-flash'));
+    timer = window.setTimeout(
+      () => targets.forEach((node) => node.classList.remove('is-flash')),
+      HIGHLIGHT_MS,
+    );
+  }
+
+  on(document, 'click', (event) => {
+    const link = event.target.closest('a[href="#contact"]');
+    if (!link) return;
+    // הגלילה מטופלת על ידי הדפדפן; ההדגשה מופעלת אחריה
+    window.setTimeout(flash, 320);
+  });
+
+  if (window.location.hash === '#contact') window.setTimeout(flash, 600);
+  on(window, 'hashchange', () => {
+    if (window.location.hash === '#contact') flash();
+  });
+}
+
 /* ------------------------------------------------------ כותרת דביקה -- */
 
 function initHeaderState() {
@@ -113,6 +156,7 @@ function boot() {
   fillStaticContent();
   guardLogos();
   initHeaderState();
+  initAnchorHighlight();
 
   // מופעל מוקדם, כדי שהעדפות נגישות שמורות יוחלו לפני ציור התוכן
   initAccessibility();

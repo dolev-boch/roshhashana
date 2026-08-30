@@ -28,20 +28,24 @@
 /* ------------------------------------------------- מסגרת הזהב של העמוד -- */
 
 /*
- * ציטוט ישיר מהתפריט המודפס. קו שיער בודד שממסגר את החלון,
- * מעל התוכן ומתחת לשכבות הדיאלוג. אינו לוכד אירועי מגע.
+ * ציטוט ישיר מהתפריט המודפס: קו שיער בודד שממסגר את החלון.
+ *
+ * מוצג במסך רחב בלבד. בטלפון הוא נקרא כמלבן צף שאינו שייך לשום דבר —
+ * הוא אינו ממסגר את התוכן אלא את החלון, ולכן בגלילה הוא נראה תלוש.
+ * במסך רחב, שבו העמוד נקרא כדף מודפס, המסגרת עושה את העבודה שלה.
  */
 .page-frame {
-  position: fixed;
-  inset: 7px;
-  z-index: 90;
-  border: 1px solid var(--frame);
-  pointer-events: none;
+  display: none;
 }
 
 @media (min-width: 64em) {
   .page-frame {
+    display: block;
+    position: fixed;
     inset: 14px;
+    z-index: 90;
+    border: 1px solid var(--frame);
+    pointer-events: none;
   }
 }
 
@@ -1176,7 +1180,9 @@
 
 /* --------------------------------------------------------------- פוטר -- */
 
+/* היעד לא ייחבא מתחת לכותרת הדביקה בעת מעבר מקישור עוגן */
 .site-footer {
+  scroll-margin-top: 5rem;
   background: var(--brand-forest);
   color: var(--text-inverse-muted);
   padding-block: var(--sp-12) var(--sp-8);
@@ -1202,11 +1208,54 @@
   gap: var(--sp-5) var(--sp-10);
 }
 
+/*
+ * יעד קישור העוגן. הריווח והמסגרת השקופה קיימים תמיד, כך שההדגשה
+ * אינה מזיזה את הפריסה כשהיא נכנסת.
+ */
 .contact-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition: background-color var(--dur-slow) var(--ease), border-color var(--dur-slow) var(--ease);
+}
+
+/*
+ * הדגשה זמנית אחרי מעבר מקישור "צרו קשר".
+ * ללא var() ובמאפיינים נפרדים — ספארי נופל על var() בתוך קיצור animation,
+ * וכשהוא נופל ההצהרה כולה מתאפסת וההדגשה לא מופיעה כלל.
+ */
+.contact-item.is-flash {
+  animation-name: contact-flash;
+  animation-duration: 2.6s;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation-iteration-count: 1;
+}
+
+@keyframes contact-flash {
+  0%, 100% {
+    background: transparent;
+    border-color: transparent;
+  }
+  12%, 72% {
+    background: rgba(184, 153, 88, 0.16);
+    border-color: var(--brand-gold);
+  }
+}
+
+/*
+ * בהפחתת תנועה ההדגשה סטטית: הכלל הגורף מבטל אנימציות,
+ * ובלי זה המשתמש לא היה מקבל שום חיווי.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .contact-item.is-flash {
+    animation: none !important;
+    background: rgba(184, 153, 88, 0.16);
+    border-color: var(--brand-gold);
+  }
 }
 
 .contact-item__label {
@@ -1458,10 +1507,17 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   outline-offset: 3px;
 }
 
+/*
+ * flex: 1 מבטיח שרוחב הבלוק זהה בכל הסניפים.
+ * בלעדיו הבלוק מתכווץ לרוחב הילד הרחב ביותר — הכתובת — ואז שורת השעות
+ * מתיישרת ביחס לרוחב שונה בכל סניף, והשורות נראות לא מיושרות זו לזו.
+ */
 .branch__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .branch__name {
@@ -1475,7 +1531,14 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   color: var(--text-muted);
 }
 
+/*
+ * המחלקה .num קובעת direction: ltr כדי שהטווח 08:30–14:00 ייקרא נכון.
+ * בפריט flex זה גם הופך את קצה ההתחלה לשמאל, ולכן נדרש align-self
+ * מפורש: הוא מכווץ את הרכיב לרוחב תוכנו ומצמיד אותו לקצה ההתחלה
+ * של הבלוק — בעברית, לימין.
+ */
 .branch__hours {
+  align-self: flex-start;
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--accent);

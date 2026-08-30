@@ -72,9 +72,13 @@ function doPost(e) {
 
     const orderCount = countOrders(sheets.orders);
 
-    // כשל במייל לא אמור לבטל הזמנה שכבר נכתבה לגיליון
+    /*
+     * כשל במייל לא מבטל הזמנה שכבר נכתבה לגיליון.
+     * אישור ההזמנה נשלח תמיד: זו הודעה תפעולית על עסקה שהלקוח יזם,
+     * ולא דבר פרסומת.
+     */
     safely(function () {
-      if (order.customer && order.customer.emailConsent) sendCustomerEmail(order);
+      sendCustomerEmail(order);
     }, 'customer email');
 
     safely(function () {
@@ -130,7 +134,6 @@ function ensureSheets() {
     'שם מלא',
     'טלפון',
     'מייל',
-    'הסכמה למייל',
     'תאריך איסוף',
     'סניף',
     'שעות הסניף',
@@ -191,7 +194,6 @@ function appendOrderRows(sheet, order) {
       order.customer.fullName,
       "'" + order.customer.phone, // גרש מונע מ-Sheets להפוך 052... ל-52
       order.customer.email,
-      order.customer.emailConsent ? 'כן' : 'לא',
       order.pickup.date,
       order.pickup.branchName || '',
       order.pickup.branchHours || '',
@@ -334,7 +336,7 @@ function readOrders(sheet) {
   if (lastRow < 2) return [];
 
   return sheet
-    .getRange(2, 1, lastRow - 1, 15)
+    .getRange(2, 1, lastRow - 1, 14)
     .getValues()
     .filter(function (row) {
       return row[0]; // שורות בלי מספר הזמנה מתעלמים מהן
@@ -342,11 +344,11 @@ function readOrders(sheet) {
     .map(function (row) {
       return {
         reference: row[0],
-        pickupDate: formatDate(row[6]),
-        branch: row[7],
-        product: row[9],
-        qty: Number(row[11]) || 0,
-        lineTotal: Number(row[12]) || 0,
+        pickupDate: formatDate(row[5]),
+        branch: row[6],
+        product: row[8],
+        qty: Number(row[10]) || 0,
+        lineTotal: Number(row[11]) || 0,
       };
     });
 }
@@ -575,7 +577,6 @@ function runTestOrder() {
       phone: '0521234567',
       email: CONFIG.OWNER_EMAIL,
       notes: 'הזמנת בדיקה — אפשר למחוק את השורות מהגיליון',
-      emailConsent: true,
     },
     pickup: {
       date: '2026-09-11',

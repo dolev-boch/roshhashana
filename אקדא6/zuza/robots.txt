@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://roshhashana.vercel.app/sitemap.xml
