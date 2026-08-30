@@ -14,7 +14,7 @@
 import { el, render, qs } from '../lib/dom.js';
 import { money } from '../lib/format.js';
 import { CATEGORIES, PRODUCTS } from '../data/products.js';
-import { resolveImage, buildSrcSet, attachImageFallback } from '../services/media.service.js';
+import { imageFor, srcSetFor, attachImageFallback } from '../services/media.service.js';
 import * as cart from '../state/cart.store.js';
 import { toast } from './toast.js';
 import { CONFIG } from '../config.js';
@@ -29,15 +29,24 @@ function ruleNode() {
 }
 
 function media(product) {
+  /*
+   * שתי בקרות אופציונליות לכל מוצר, לשליטה בתמונות שאינן ריבועיות:
+   *   fit: 'contain'  — התמונה כולה נכנסת לתיבה, בלי שום חיתוך.
+   *   focus: 'top'    — נקודת העניין בתמונה, כשהחיתוך מקצץ את החלק הלא נכון.
+   * ללא הגדרה: מילוי התיבה ממורכז, שזה הנכון לתמונה ריבועית.
+   */
+  const contain = product.fit === 'contain';
+
   const img = el('img', {
-    class: 'menu-item__img',
-    src: resolveImage(product.image, 800),
+    class: `menu-item__img${contain ? ' menu-item__img--contain' : ''}`,
+    src: imageFor(product, 1000),
     alt: product.alt || product.name,
     loading: 'lazy',
     decoding: 'async',
     // היחס נשמר גם לפני שהתמונה נטענת, כדי שהפריסה לא תקפוץ
-    width: 800,
-    height: 600,
+    // תואם ליחס תיבת התמונה (4:5), כדי שהפריסה לא תקפוץ לפני הטעינה
+    width: 1000,
+    height: 1250,
     /*
      * בנייד התמונה תופסת את רוחב העמודה כולה, בדסקטופ עמודה של 268px.
      * sizes מאפשר לדפדפן לבחור את הקובץ הנכון עוד לפני חישוב הפריסה.
@@ -45,7 +54,9 @@ function media(product) {
     sizes: '(min-width: 40em) 268px, calc(100vw - 2.5rem)',
   });
 
-  const srcset = buildSrcSet(product.image);
+  if (product.focus) img.style.objectPosition = product.focus;
+
+  const srcset = srcSetFor(product);
   if (srcset) img.setAttribute('srcset', srcset);
 
   attachImageFallback(img);

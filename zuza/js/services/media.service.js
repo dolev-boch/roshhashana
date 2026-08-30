@@ -14,7 +14,17 @@
 
 import { CONFIG } from '../config.js';
 
-const { cloudinaryBase, cloudinaryTransform, placeholder, srcsetWidths } = CONFIG.images;
+const {
+  cloudinaryBase,
+  cloudinaryTransform,
+  placeholder,
+  productsDir,
+  autoByProductId,
+  defaultExtension,
+} = CONFIG.images;
+
+/* ערך ברירת מחדל — כדי שהסרת ההגדרה לא תפיל את בניית ה-srcset */
+const srcsetWidths = CONFIG.images.srcsetWidths ?? [400, 800, 1200];
 
 const isAbsolute = (value) => /^https?:\/\//i.test(value);
 const isLocalPath = (value) =>
@@ -48,7 +58,7 @@ export function resolveImage(source, width) {
     return value.replace(/\/upload\/(?:[^/]*_[^/]*\/)?/, `/upload/${transformFor(width)}/`);
   }
 
-  if (isLocalPath(value)) return value;
+  if (isLocalPath(value)) return encodePath(value);
 
   if (cloudinaryBase) {
     const base = cloudinaryBase.replace(/\/+$/, '');
@@ -71,6 +81,42 @@ export function buildSrcSet(source) {
   if (!canResize) return null;
 
   return srcsetWidths.map((width) => `${resolveImage(value, width)} ${width}w`).join(', ');
+}
+
+/**
+ * קידוד תווים שאינם ASCII בנתיב.
+ * שם קובץ בעברית חייב להיות מקודד בכתובת (%D7%A2...), אחרת חלק
+ * מהדפדפנים והשרתים לא ימצאו אותו. מדלגים על נתיב שכבר מקודד.
+ */
+function encodePath(value) {
+  if (value.includes('%')) return value;
+  return value.split('/').map(encodeURIComponent).join('/');
+}
+
+/**
+ * התמונה של מוצר, לפי סדר עדיפות:
+ *   1. השדה `image` של המוצר, אם מולא.
+ *   2. זיהוי לפי שם הקובץ: <productsDir>/<id>.<ext> — כשההגדרה פעילה.
+ *   3. תמונת ברירת המחדל.
+ *
+ * זו הפונקציה שרכיבי התצוגה משתמשים בה. הכלל היחיד שצריך לזכור:
+ * שם הקובץ חייב להיות זהה למזהה המוצר.
+ */
+export function imageFor(product, width) {
+  const explicit = String(product?.image ?? '').trim();
+  if (explicit) return resolveImage(explicit, width);
+
+  if (autoByProductId && product?.id) {
+    return `${productsDir}/${product.id}.${defaultExtension}`;
+  }
+
+  return placeholder;
+}
+
+/** srcset למוצר, לפי אותו סדר עדיפות */
+export function srcSetFor(product) {
+  const explicit = String(product?.image ?? '').trim();
+  return explicit ? buildSrcSet(explicit) : null;
 }
 
 /** חיבור נפילה חיננית לתמונת ברירת מחדל */

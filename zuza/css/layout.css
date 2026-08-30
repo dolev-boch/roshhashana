@@ -373,17 +373,17 @@
 
 .menu-item__media {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: var(--media-ratio);
   overflow: hidden;
   border: 1px solid var(--hairline);
   background: var(--surface-sunken);
 }
 
 /* גיבוי ליחס גובה-רוחב בדפדפנים שאינם תומכים ב-aspect-ratio */
-@supports not (aspect-ratio: 4 / 3) {
+@supports not (aspect-ratio: 4 / 5) {
   .menu-item__media {
     height: 0;
-    padding-block-end: 75%;
+    padding-block-end: var(--media-ratio-fallback);
   }
 
   .menu-item__media .menu-item__img {
@@ -392,11 +392,29 @@
   }
 }
 
+/*
+ * ברירת המחדל היא cover: התמונה ממלאת את התיבה בלי עיוות.
+ * כשהתמונה ריבועית והתיבה ריבועית — אין חיתוך כלל, המוצר נראה במלואו.
+ * תמונה שאינה ריבועית תיחתך מהצדדים הארוכים, ולכן יש שתי בקרות למטה.
+ */
 .menu-item__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* מרכז התמונה הוא נקודת העניין כברירת מחדל; ניתן לשינוי לכל מוצר */
+  object-position: center;
   transition: transform var(--dur-slow) var(--ease);
+}
+
+/*
+ * fit: 'contain' במוצר — התמונה כולה נכנסת לתיבה בלי שום חיתוך.
+ * מתאים לתמונה שאינה ריבועית שאסור לקצץ בה, או לצילום על רקע לבן.
+ * הרקע ממלא את השוליים שנוצרים, כך שזה נראה מכוון ולא כמו תקלה.
+ */
+.menu-item__img--contain {
+  object-fit: contain;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  background: var(--surface-raised);
 }
 
 /*

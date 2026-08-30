@@ -16,6 +16,11 @@
  *                          (יורכב אוטומטית לפי CONFIG.images.cloudinaryBase)
  *                     אם השדה ריק או שהתמונה נכשלת - תוצג תמונת ברירת מחדל.
  *   alt       (רשות)  טקסט חלופי לתמונה. אם חסר, נעשה שימוש בשם המוצר.
+ *   fit       (רשות)  'contain' יציג את התמונה במלואה בלי שום חיתוך.
+ *                     שימושי לתמונה שאינה ריבועית שאסור לקצץ בה.
+ *                     ברירת המחדל ממלאת את התיבה, וזה הנכון לתמונה ריבועית.
+ *   focus     (רשות)  נקודת העניין בתמונה כשיש חיתוך: 'top', 'bottom',
+ *                     'center' או ערך CSS מלא כמו '50% 30%'.
  *   available (רשות)  false יסמן "אזל". ברירת מחדל: true.
  *   badge     (רשות)  תווית קטנה, למשל 'מומלץ'.
  * ---------------------------------------------------------------------------
@@ -47,7 +52,7 @@ export const PRODUCTS = [
     name: 'עוגת דבש ושקדים',
     desc: 'קלאסיקה חגיגית במרקם עשיר ועדין.',
     price: 54,
-    image: '',
+    image: 'assets/images/products/honey-almond-cake.jpg',
   },
   {
     id: 'date-walnut-cake',
@@ -55,7 +60,7 @@ export const PRODUCTS = [
     name: 'עוגת תמרים ואגוזי מלך',
     desc: 'בחושה עמוקה, חמה ועשירה בטעמים.',
     price: 48,
-    image: '',
+    image: 'assets/images/products/date-walnut-cake.jpg',
   },
   {
     id: 'maple-nut-cake',
@@ -63,7 +68,7 @@ export const PRODUCTS = [
     name: 'עוגת מייפל ופיצוחים',
     desc: 'מתיקות מעודנת עם קראנץ׳ מפנק.',
     price: 52,
-    image: '',
+    image: 'assets/images/products/maple-nut-cake.jpg',
   },
   {
     id: 'apple-spice-cake',
@@ -72,7 +77,7 @@ export const PRODUCTS = [
     desc: 'עוגה חגיגית עם ניחוחות סתיו מושלמים לראש השנה.',
     note: 'קוטר 20',
     price: 92,
-    image: '',
+    image: 'assets/images/products/apple-spice-cake.jpg',
     badge: 'מומלץ',
   },
 
@@ -83,7 +88,7 @@ export const PRODUCTS = [
     name: 'מארז פחזניות קראמבל וניל',
     desc: 'מארז חגיגי ומרשים, מושלם לאירוח.',
     price: 108,
-    image: '',
+    image: 'assets/images/products/vanilla-crumble-choux.jpg',
   },
   {
     id: 'poppy-pressburger',
@@ -99,7 +104,7 @@ export const PRODUCTS = [
     name: 'רולדת קפה, אגוזי לוז ושנטי וניל',
     desc: 'שילוב מעודן ומדויק של קפה, אגוזי לוז ושנטי וניל.',
     price: 98,
-    image: '',
+    image: 'assets/images/products/coffee-hazelnut-roll.jpg',
   },
 
   /* ------------------------------- עוגות חגיגיות למרכז השולחן -- */
@@ -109,7 +114,7 @@ export const PRODUCTS = [
     name: 'טארט שקדים ואגסים בקרמל',
     desc: 'אלגנטי ועדין עם שילוב טעמים קלאסי.',
     price: 112,
-    image: '',
+    image: 'assets/images/products/almond-pear-tart.jpg',
   },
   {
     id: 'classic-tiramisu',
@@ -117,7 +122,7 @@ export const PRODUCTS = [
     name: 'טירמיסו קלאסי',
     desc: 'מוגש בכלי הגשה חגיגי.',
     price: 220,
-    image: '',
+    image: 'assets/images/products/classic-tiramisu.jpg',
   },
   {
     id: 'ny-cheesecake',

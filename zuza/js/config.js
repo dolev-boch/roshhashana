@@ -121,8 +121,32 @@ export const CONFIG = Object.freeze({
      */
     cloudinaryBase: '',
     /** טרנספורמציה שתוזרק לכתובות Cloudinary (איכות ופורמט אוטומטיים) */
-    cloudinaryTransform: 'f_auto,q_auto,c_fill,g_auto,ar_4:3,w_800',
+    cloudinaryTransform: 'f_auto,q_auto,c_fill,g_auto,ar_4:5,w_800',
+    /** תיקיית התמונות המקומית */
+    productsDir: 'assets/images/products',
+
+    /**
+     * זיהוי אוטומטי לפי שם הקובץ.
+     * כשהוא פעיל ולמוצר אין ערך ב-`image`, המערכת מחפשת לבד את הקובץ
+     * `<productsDir>/<מזהה המוצר>.<defaultExtension>`.
+     *
+     * המשמעות: מספיק לשמור קובץ בשם `poppy-pressburger.jpg` בתיקייה,
+     * והוא יופיע באתר — בלי לגעת בקוד.
+     *
+     * הערה: דפדפן אינו יכול לבדוק מראש אם קובץ קיים. כשאין קובץ תואם
+     * תירשם שגיאת 404 בקונסול ותוצג תמונת ברירת המחדל. זו התנהגות תקינה.
+     */
+    autoByProductId: true,
+    defaultExtension: 'jpg',
+
     /** תמונת ברירת מחדל כאשר למוצר אין תמונה או שהטעינה נכשלה */
     placeholder: 'assets/images/products/placeholder.svg',
+
+    /**
+     * רוחבים שייווצרו ב-srcset עבור תמונות Cloudinary.
+     * מכשיר נייד יוריד את הקטן, מסך גדול את החד — בלי לשנות דבר בקוד.
+     * לקבצים מקומיים לא נוצר srcset: אין דרך לייצר מהם גרסאות בגדלים שונים.
+     */
+    srcsetWidths: [400, 600, 800, 1200],
   },
 });

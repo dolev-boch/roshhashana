@@ -8,7 +8,7 @@
 
 import { el, qs, qsa, render } from '../lib/dom.js';
 import { money } from '../lib/format.js';
-import { resolveImage, attachImageFallback } from '../services/media.service.js';
+import { imageFor, attachImageFallback } from '../services/media.service.js';
 import { scrollLock, trapFocus } from '../lib/ui-kit.js';
 import * as cart from '../state/cart.store.js';
 import { toast } from './toast.js';
@@ -46,7 +46,7 @@ function stepper(item) {
 function cartLine(item) {
   const thumb = el('img', {
     class: 'cart-line__thumb',
-    src: resolveImage(item.product.image, 200),
+    src: imageFor(item.product, 200),
     alt: '',
     loading: 'lazy',
     decoding: 'async',
