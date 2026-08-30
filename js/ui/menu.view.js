@@ -18,6 +18,7 @@ import { imageFor, srcSetFor, attachImageFallback } from '../services/media.serv
 import * as cart from '../state/cart.store.js';
 import { toast } from './toast.js';
 import { CONFIG } from '../config.js';
+import { createBand, galleryImage } from './gallery.js';
 
 /** מפת מזהה מוצר -> אלמנט אזור הפעולה, לעדכון ממוקד */
 const actionSlots = new Map();
@@ -180,7 +181,27 @@ export function initMenu({ onAdd, onOpenCart } = {}) {
   if (!root) return;
 
   actionSlots.clear();
-  render(root, CATEGORIES.map(categorySection).filter(Boolean));
+
+  /*
+   * רצועת אווירה משולבת אחרי הקטגוריה הראשונה, כדי לשבור גלילה ארוכה
+   * של עשרה מוצרים. היא יוצאת מרוחב המכולה לרוחב המסך המלא —
+   * ראו .atmos--bleed ב-layout.css.
+   */
+  const sections = [];
+  CATEGORIES.map(categorySection)
+    .filter(Boolean)
+    .forEach((section, index) => {
+      sections.push(section);
+      if (index === 0) {
+        const band = createBand(galleryImage(1));
+        if (band) {
+          band.classList.add('atmos--bleed');
+          sections.push(band);
+        }
+      }
+    });
+
+  render(root, sections);
 
   /*
    * אישור לא חוסם: הודעה קצרה עם כפתור מעבר לסל.

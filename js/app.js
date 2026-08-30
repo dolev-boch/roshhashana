@@ -11,6 +11,7 @@ import { initMenu } from './ui/menu.view.js';
 import { initCart } from './ui/cart.view.js';
 import { initCheckout } from './ui/checkout.view.js';
 import { initAccessibility } from './ui/accessibility.js';
+import { initGalleryBands } from './ui/gallery.js';
 import * as cart from './state/cart.store.js';
 import { isOrderingOpen, ordersCloseLong, getBranches } from './services/pickup.service.js';
 
@@ -157,6 +158,7 @@ function boot() {
   guardLogos();
   initHeaderState();
   initAnchorHighlight();
+  initGalleryBands();
 
   // מופעל מוקדם, כדי שהעדפות נגישות שמורות יוחלו לפני ציור התוכן
   initAccessibility();

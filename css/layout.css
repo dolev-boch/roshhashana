@@ -1635,3 +1635,84 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   font-weight: 700;
   color: var(--accent);
 }
+
+/* ------------------------------------------------------ רצועות אווירה -- */
+
+/*
+ * רצועת תמונה רחבה. היחס משתנה לפי רוחב המסך ותואם ל-<source>
+ * שנבנה ב-gallery.js: 4:3 בטלפון, 16:9 בטאבלט, 21:9 במסך רחב.
+ * צילום 21:9 בטלפון היה הופך לפס דק שאי אפשר לזהות בו דבר.
+ */
+.atmos {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface-sunken);
+  border-block: 1px solid var(--hairline);
+}
+
+.atmos__frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+@supports not (aspect-ratio: 4 / 3) {
+  .atmos__frame {
+    height: 0;
+    padding-block-end: 75%;
+    position: relative;
+  }
+
+  .atmos__frame .atmos__img {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.atmos__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 34em) {
+  .atmos__frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  @supports not (aspect-ratio: 16 / 9) {
+    .atmos__frame {
+      padding-block-end: 56.25%;
+    }
+  }
+}
+
+@media (min-width: 62em) {
+  .atmos__frame {
+    aspect-ratio: 21 / 9;
+  }
+
+  @supports not (aspect-ratio: 21 / 9) {
+    .atmos__frame {
+      padding-block-end: 42.85%;
+    }
+  }
+}
+
+/*
+ * רצועה שיושבת בתוך מכולת התפריט אך נפרשת לרוחב המסך המלא.
+ * החישוב עובד בשני כיווני כתיבה, ו-overflow-x: hidden על ה-body
+ * מונע גלילה אופקית כשקיים פס גלילה אנכי.
+ */
+.atmos--bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  margin-block: var(--section-y);
+}
+
+/* המרווח סביב הרצועות שמחוץ למכולה */
+[data-band] .atmos {
+  margin-block: 0;
+}

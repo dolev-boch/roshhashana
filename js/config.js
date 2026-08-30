@@ -81,7 +81,7 @@ export const CONFIG = Object.freeze({
      * הנחיות מלאות ב-google-apps-script/README.md
      * דוגמה: 'https://script.google.com/macros/s/AKfyc.../exec'
      */
-    endpoint: '',
+    endpoint: 'https://script.google.com/macros/s/AKfycbxnx-qS2B4ywIhJm7V7zh0ARRsGHTcfLI24aDNyD8INRSf0_rfBqQNEdxgtBnF7Y_4/exec',
 
     /** ל-mode: 'webhook' בלבד */
     webhookUrl: '',
@@ -144,6 +144,29 @@ export const CONFIG = Object.freeze({
      */
     autoByProductId: true,
     defaultExtension: 'jpg',
+
+    /**
+     * תמונות אווירה רחבות, המשולבות כרצועות לאורך העמוד.
+     * כולן מ-Cloudinary, ולכן נבנות אוטומטית בשלושה חיתוכים:
+     * 4:3 בטלפון, 16:9 בטאבלט ו-21:9 במסך רחב.
+     *
+     * הטקסט החלופי הוא תיאור כללי — כדאי לדייק אותו לפי מה שמופיע
+     * בכל צילום, לטובת קוראי מסך ומנועי חיפוש.
+     */
+    gallery: [
+      {
+        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0554-36_msqdta.jpg',
+        alt: 'שולחן חג ערוך במאפי הקונדיטוריה',
+      },
+      {
+        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0436-14_g52oak.jpg',
+        alt: 'מבחר מתוקים לראש השנה',
+      },
+      {
+        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111815/IMG_0430-12_d2xak0.jpg',
+        alt: 'פינת הגשה בקונדיטוריה',
+      },
+    ],
 
     /** תמונת ברירת מחדל כאשר למוצר אין תמונה או שהטעינה נכשלה */
     placeholder: 'assets/images/products/placeholder.svg',

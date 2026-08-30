@@ -97,7 +97,7 @@ export const PRODUCTS = [
     name: 'פרסבורגר פרג',
     desc: 'קלאסיקה עשירה ומפנקת עם פרג טרי.',
     price: 86,
-    image: 'assets/images/products/poppy-pressburger.jpg',
+    image: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111598/poppy-pressburger_frezor.jpg',
   },
   {
     id: 'coffee-hazelnut-roll',
@@ -133,6 +133,6 @@ export const PRODUCTS = [
     name: 'עוגת גבינה אפויה בסגנון ניו יורק',
     desc: 'מוגשת עם פירות טריים ושנטי וניל.',
     price: 188,
-    image: 'assets/images/products/ny-cheesecake.jpg',
+    image: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111598/ny-cheesecake_tjwddn.jpg',
   },
 ];
