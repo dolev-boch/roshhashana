@@ -14,9 +14,13 @@
       ]
     },
     {
+      "//": "immutable אינו מתאים כאן: שמות הקבצים קבועים ואינם כוללים חתימת תוכן. עם immutable, החלפת תמונה באותו שם לא הייתה מגיעה למי שכבר ביקר באתר — וגם תשובת 404 הייתה נשמרת במטמון לשנה. stale-while-revalidate נותן מהירות דומה בלי הסיכון הזה.",
       "source": "/assets/images/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        }
       ]
     },
     {

@@ -10,11 +10,12 @@ import { el, qs, qsa, render } from '../lib/dom.js';
 import { money, phoneDisplay } from '../lib/format.js';
 import { scrollLock, trapFocus, sleep } from '../lib/ui-kit.js';
 import { validate, validateField } from '../services/validation.service.js';
-import { buildOrder, submitOrder, openWhatsApp } from '../services/order.service.js';
+import { buildOrder, submitOrder } from '../services/order.service.js';
 import { getBranches, findBranch, pickupDateLong } from '../services/pickup.service.js';
 import { createBrandLoader } from './preloader.js';
 import * as cart from '../state/cart.store.js';
 import { toast } from './toast.js';
+import { CONFIG } from '../config.js';
 
 const STEPS = [
   { id: 'details', label: 'פרטים' },
@@ -41,6 +42,8 @@ const FILTERS = {
 
 /* סמל Waze — SVG מוטבע, כדי שלא תידרש בקשת רשת נוספת */
 const wazeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>`;
+
+const alertIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 8v5m0 3.5v.01"/><circle cx="12" cy="12" r="9"/></svg>`;
 
 const checkIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
 
@@ -338,13 +341,13 @@ export function initCheckout({ onComplete } = {}) {
 
   /** נוסח ההסבר במסך ההצלחה, לפי ערוץ השליחה */
   function successNote(result) {
-    if (result?.requiresManualSend) return 'לסיום, נא לשלוח לנו את ההזמנה בוואטסאפ.';
+    if (!result?.ok) return 'ההזמנה לא נקלטה. נא ליצור איתנו קשר טלפוני כדי להשלים אותה.';
     return 'אישור עם פרטי ההזמנה נשלח לכתובת המייל שמילאתם.';
   }
 
   function renderSuccess(order, result) {
     stepsBar.hidden = true;
-    titleNode.textContent = 'ההזמנה נקלטה';
+    titleNode.textContent = result?.ok ? 'ההזמנה נקלטה' : 'ההזמנה לא נקלטה';
 
     // שני הסניפים מוצגים תמיד, כדי שהמידע יהיה נגיש גם אחרי סגירת החלון
     const branchList = el('div', { class: 'branch-links' }, [
@@ -377,23 +380,17 @@ export function initCheckout({ onComplete } = {}) {
     ]);
 
     /*
-     * כפתור השליחה בוואטסאפ מוצג רק כשההזמנה טרם הגיעה אלינו —
-     * כשהשליחה נכשלה, או לפני שהוגדר endpoint. במסלול התקין ההזמנה
-     * כבר נרשמה והמייל נשלח, ולכן אין ללקוח מה לעשות והכפתור מיותר.
+     * כשההזמנה לא נשלחה, האפשרות היחידה שנשארת ללקוח היא להתקשר.
+     * כפתור התקשרות עדיף על הודעת שגיאה בלבד, ופועל בלחיצה אחת בנייד.
      */
-    const manualSendUrl = result?.requiresManualSend
-      ? result.url || result.fallback?.url
-      : null;
-
     const actions = el('div', { class: 'success__actions' }, [
-      manualSendUrl
-        ? el('button', {
+      result?.ok
+        ? null
+        : el('a', {
             class: 'btn btn--gold btn--lg',
-            type: 'button',
-            on: { click: () => openWhatsApp(manualSendUrl) },
-            text: 'שליחת ההזמנה בוואטסאפ',
-          })
-        : null,
+            href: `tel:${CONFIG.business.phone.replace(/\D/g, '')}`,
+            text: `להתקשרות · ${CONFIG.business.phone}`,
+          }),
       el('button', {
         class: 'btn btn--outline',
         type: 'button',
@@ -404,11 +401,22 @@ export function initCheckout({ onComplete } = {}) {
 
     render(body, [
       el('div', { class: 'success' }, [
-        el('span', { class: 'success__mark', 'aria-hidden': 'true', html: checkIcon }),
-        el('h3', { class: 'success__title', text: `תודה, ${state.customer.fullName.split(' ')[0]}` }),
+        el('span', {
+          class: `success__mark${result?.ok ? '' : ' success__mark--error'}`,
+          'aria-hidden': 'true',
+          html: result?.ok ? checkIcon : alertIcon,
+        }),
+        el('h3', {
+          class: 'success__title',
+          text: result?.ok
+            ? `תודה, ${state.customer.fullName.split(' ')[0]}`
+            : 'משהו השתבש',
+        }),
         el('p', {
           class: 'success__text',
-          text: `ההזמנה התקבלה. האיסוף ב${order.pickup.dateLong}, ${order.pickup.branchName}.`,
+          text: result?.ok
+            ? `ההזמנה התקבלה. האיסוף ב${order.pickup.dateLong}, ${order.pickup.branchName}.`
+            : 'ההזמנה שלכם לא נשלחה. הפרטים נשמרו במסך, ואפשר להשלים אותה בטלפון.',
         }),
         el('p', { class: 'success__ref' }, [
           'מספר הזמנה: ',
@@ -418,7 +426,7 @@ export function initCheckout({ onComplete } = {}) {
           class: 'field__hint',
           text: successNote(result),
         }),
-        branchList,
+        result?.ok ? branchList : null,
         actions,
       ]),
     ]);
@@ -449,7 +457,7 @@ export function initCheckout({ onComplete } = {}) {
     loader.stop();
 
     if (!result.ok) {
-      toast('השליחה נכשלה — אפשר להשלים בוואטסאפ', { type: 'error' });
+      toast('ההזמנה לא נשלחה — נא ליצור קשר טלפוני', { type: 'error' });
     }
 
     cart.clear();

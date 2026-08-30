@@ -87,6 +87,7 @@ export const PRODUCTS = [
     category: 'rosh-hashana-specials',
     name: 'מארז פחזניות קראמבל וניל',
     desc: 'מארז חגיגי ומרשים, מושלם לאירוח.',
+    note: '12 יחידות',
     price: 108,
     image: 'assets/images/products/vanilla-crumble-choux.jpg',
   },

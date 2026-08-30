@@ -387,15 +387,24 @@
   display: flex;
   align-items: center;
   gap: var(--sp-3);
+  width: 100%;
   max-width: min(440px, 100%);
+  min-height: 60px;
   padding: var(--sp-3) var(--sp-4) var(--sp-3) var(--sp-2);
   background: var(--brand-forest);
   color: var(--text-inverse);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+  /*
+   * ההודעה מופיעה בתחתית המסך, ושם היא עלולה לנחות מעל הפוטר הכהה —
+   * ואז רקע כהה על רקע כהה נבלע. מסגרת זהב וצל מודגש מפרידים אותה
+   * מכל רקע שהיא נוחתת עליו, בהיר או כהה.
+   */
+  border: 1px solid var(--brand-gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   font-family: var(--font-ui);
   font-size: var(--fs-sm);
   font-weight: 500;
+  line-height: var(--lh-snug);
   animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -418,6 +427,8 @@
 .toast__text {
   flex: 1;
   min-width: 0;
+  /* טקסט ארוך נשבר לשורה שנייה במקום לדחוס את הכפתור */
+  overflow-wrap: anywhere;
 }
 
 /* ההודעה מקבלת אירועי מגע רק כשיש בה כפתור */

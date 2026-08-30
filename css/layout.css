@@ -1134,6 +1134,11 @@
   animation: pop 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.success__mark--error {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
 .success__mark svg {
   width: 30px;
   height: 30px;

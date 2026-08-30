@@ -84,12 +84,6 @@ export function orderToText(order) {
 /* ------------------------------------------------------------- מתאמים -- */
 
 const adapters = {
-  /** פותח וואטסאפ עם סיכום ההזמנה מוכן לשליחה */
-  whatsapp(order) {
-    const url = `https://wa.me/${CONFIG.business.whatsapp}?text=${encodeURIComponent(orderToText(order))}`;
-    return { ok: true, channel: 'whatsapp', url };
-  },
-
   /**
    * שולח את ההזמנה ל-Google Apps Script, שכותב לגיליון ושולח את המיילים.
    *
@@ -157,16 +151,17 @@ export async function submitOrder(order) {
   const { mode } = CONFIG.submission;
 
   /*
-   * לפני שה-Apps Script נפרס אין endpoint, ואז ההזמנה נשלחת בוואטסאפ.
-   * במצב כזה ההזמנה אינה מגיעה לשום מקום עד שהלקוח לוחץ על הכפתור,
-   * ולכן היא מסומנת כ-requiresManualSend ומסך הסיום מציג כפתור שליחה.
-   * לאחר הגדרת ה-endpoint המצב הזה אינו קורה, והכפתור אינו מוצג.
+   * ללא endpoint אין לאן לשלוח את ההזמנה. במקום להציג ללקוח מסך הצלחה
+   * שאינו נכון, מוחזרת שגיאה מפורשת — ומסך הסיום מפנה אותו להתקשר.
+   * זהו מצב תצורה, לא מצב תפעולי: ברגע שמוגדר endpoint הוא אינו קורה.
    */
-  const missingEndpoint = (mode === 'sheets' || mode === 'both') && !CONFIG.submission.endpoint;
-  const effectiveMode = missingEndpoint ? 'whatsapp' : mode;
+  if ((mode === 'sheets' || mode === 'both') && !CONFIG.submission.endpoint) {
+    console.error('[order] submission.endpoint is not configured');
+    return { ok: false, error: 'ההזמנה לא נשלחה — האתר אינו מחובר למערכת ההזמנות' };
+  }
 
   try {
-    if (effectiveMode === 'sheets') {
+    if (mode === 'sheets') {
       const result = await adapters.sheets(order);
       // ההזמנה נשלחה. אין צורך בפעולה נוספת מהלקוח.
       return {
@@ -177,32 +172,18 @@ export async function submitOrder(order) {
       };
     }
 
-    if (effectiveMode === 'webhook') {
+    if (mode === 'webhook') {
       await adapters.webhook(order);
       return { ok: true, channels: ['webhook'], requiresManualSend: false };
     }
 
-    if (effectiveMode === 'both') {
-      await adapters.sheets(order);
-      return { ok: true, channels: ['sheets'], requiresManualSend: false };
-    }
-
-    // וואטסאפ בלבד: ההזמנה תגיע רק אחרי שהלקוח ישלח אותה
-    return { ok: true, channels: ['whatsapp'], requiresManualSend: true, ...adapters.whatsapp(order) };
+    await adapters.sheets(order);
+    return { ok: true, channels: ['sheets'], requiresManualSend: false };
   } catch (error) {
     console.error('[order] submission failed', error);
     // גיבוי: גם אם השרת נכשל, הלקוח עדיין יכול לשלוח בוואטסאפ
-    return {
-      ok: false,
-      error: 'לא הצלחנו לשלוח את ההזמנה אוטומטית',
-      requiresManualSend: true,
-      fallback: adapters.whatsapp(order),
-    };
+    return { ok: false, error: 'לא הצלחנו לשלוח את ההזמנה' };
   }
 }
 
-/** פתיחת קישור וואטסאפ בצורה שעוברת חוסמי חלונות קופצים בנייד */
-export function openWhatsApp(url) {
-  const win = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!win) window.location.href = url;
-}
+
