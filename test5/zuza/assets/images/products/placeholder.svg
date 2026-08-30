@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" role="img" aria-label="תמונת המוצר תתווסף בקרוב">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F6EFE7"/>
+      <stop offset="1" stop-color="#ECE2D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect x="30" y="30" width="740" height="940" fill="none" stroke="#B89958" stroke-opacity="0.32" stroke-width="1.5"/>
+  <g fill="#B89958" opacity="0.85">
+    <path d="M400 424l9 9-9 9-9-9z"/>
+    <path d="M318 433h56v1.6h-56zM426 433h56v1.6h-56z"/>
+  </g>
+  <text x="400" y="530" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-style="italic" fill="#B89958" opacity="0.9">Zuza</text>
+  <text x="400" y="578" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" letter-spacing="7" fill="#B89958" opacity="0.7">PATISSERIE</text>
+  <g fill="#B89958" opacity="0.55">
+    <path d="M400 622l7 7-7 7-7-7z"/>
+  </g>
+</svg>
