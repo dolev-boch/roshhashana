@@ -1,0 +1,787 @@
+/* ==========================================================================
+   components.css — רכיבי ממשק לשימוש חוזר
+   ========================================================================== */
+
+/* ------------------------------------------------------------- כפתורים -- */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
+  --btn-border: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 48px; /* יעד מגע מינימלי */
+  padding: 0.8rem 1.75rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius);
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.btn--primary {
+  --btn-bg: var(--brand-forest);
+  --btn-fg: var(--brand-cream-100);
+  --btn-border: var(--brand-forest);
+}
+
+.btn--gold {
+  --btn-bg: var(--brand-gold);
+  --btn-fg: #ffffff;
+  --btn-border: var(--brand-gold);
+}
+
+.btn--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--brand-forest);
+  --btn-border: var(--border-strong);
+}
+
+.btn--outline-inverse {
+  --btn-bg: transparent;
+  --btn-fg: var(--brand-cream-100);
+  --btn-border: rgba(184, 153, 88, 0.5);
+}
+
+.btn--ghost {
+  --btn-fg: var(--text-muted);
+  min-height: 44px;
+  padding: 0.5rem 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--lg {
+  min-height: 54px;
+  padding: 1rem 2.25rem;
+  font-size: var(--fs-sm);
+}
+
+@media (hover: hover) {
+  .btn--primary:hover {
+    --btn-bg: var(--brand-forest-600);
+    --btn-border: var(--brand-forest-600);
+  }
+
+  .btn--gold:hover {
+    --btn-bg: var(--brand-gold-600);
+    --btn-border: var(--brand-gold-600);
+  }
+
+  .btn--outline-inverse:hover {
+    --btn-bg: rgba(184, 153, 88, 0.16);
+    --btn-border: var(--brand-gold);
+  }
+
+  .btn--outline:hover {
+    --btn-bg: var(--accent-soft);
+    --btn-border: var(--accent);
+    --btn-fg: var(--brand-forest);
+  }
+
+  .btn--ghost:hover {
+    --btn-fg: var(--text);
+    --btn-bg: var(--accent-soft);
+  }
+}
+
+/* מצב טעינה של כפתור */
+.btn.is-loading {
+  color: transparent !important;
+  pointer-events: none;
+  position: relative;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentcolor;
+  border-radius: 50%;
+  border-block-start-color: transparent;
+  color: var(--brand-cream-100);
+  animation: spin 700ms linear infinite;
+}
+
+.btn--outline.is-loading::after {
+  color: var(--brand-forest);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* כפתור אייקון עגול */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (hover: hover) {
+  .icon-btn:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+}
+
+/* ---------------------------------------------------------------- תגים -- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.16rem 0.55rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.badge--muted {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------- כותרת מקטע -- */
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-block-end: var(--sp-6);
+  text-align: center;
+}
+
+.section-head__title {
+  font-size: var(--fs-xl);
+  font-weight: 300;
+  letter-spacing: var(--tracking-tight);
+  color: var(--brand-forest);
+}
+
+
+.section-head__caption {
+  max-width: 48ch;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+/* קו מפריד מעוטר עם מעוין — שפת העיצוב של התפריט המודפס */
+.rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  width: 100%;
+  max-width: 210px;
+  color: var(--accent);
+}
+
+.rule::before,
+.rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentcolor;
+  opacity: 0.5;
+}
+
+.rule__mark {
+  width: 7px;
+  height: 7px;
+  background: currentcolor;
+  transform: rotate(45deg);
+}
+
+/* -------------------------------------------------------------- שדות -- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.field__label {
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.field__label .req {
+  color: var(--accent);
+  margin-inline-start: 2px;
+}
+
+.field__control {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 1rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.field__control::placeholder {
+  color: var(--text-subtle);
+  opacity: 1;
+}
+
+.field__control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field__hint {
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--text-muted);
+}
+
+.field__error {
+  display: none;
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.field.has-error .field__control {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.field.has-error .field__error {
+  display: block;
+}
+
+/* שדות שבהם התוכן לטיני (טלפון, אימייל) — יישור והכיוון נכונים */
+.field__control--ltr {
+  direction: ltr;
+  text-align: start;
+}
+
+/* ---------------------------------------------------------- תיבת סימון -- */
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+@media (hover: hover) {
+  .checkbox:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+/*
+ * הקלט עצמו נשאר בעץ הנגישות ומקבל פוקוס — רק מוסתר ויזואלית.
+ * הריבוע המצויר הוא תצוגה בלבד.
+ */
+.checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+}
+
+.checkbox__box {
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-block-start: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.checkbox__box::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-start: 7px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0.6);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.checkbox__input:checked + .checkbox__box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox__input:checked + .checkbox__box::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.checkbox__input:focus-visible + .checkbox__box {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.checkbox__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.checkbox__title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.checkbox__hint {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------- בורר כמות -- */
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.stepper__btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--brand-forest);
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.stepper__btn:disabled {
+  color: var(--text-subtle);
+  opacity: 0.5;
+}
+
+@media (hover: hover) {
+  .stepper__btn:not(:disabled):hover {
+    background: var(--accent-soft);
+  }
+}
+
+.stepper__value {
+  min-width: 2.5rem;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper--sm .stepper__btn {
+  width: 38px;
+  height: 38px;
+}
+
+.stepper--sm .stepper__value {
+  min-width: 2rem;
+  font-size: var(--fs-sm);
+}
+
+/* -------------------------------------------------------------- הודעות -- */
+
+.toast-stack {
+  position: fixed;
+  inset-block-end: calc(var(--safe-bottom) + var(--sp-4));
+  inset-inline: var(--sp-4);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: min(420px, 100%);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--brand-forest);
+  color: var(--text-inverse);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast.is-leaving {
+  animation: toast-out 240ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.toast__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-gold-400);
+}
+
+.toast--error .toast__dot {
+  background: #e0857c;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* --------------------------------------------------------- מסך טעינה -- */
+
+/* רשת ביטחון: גם אם הסקריפט נכשל, המסך לא יישאר תקוע לנצח */
+.preloader {
+  animation: preloader-failsafe 1ms linear 10s forwards;
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: grid;
+  place-items: center;
+  background: var(--brand-forest);
+  transition: opacity var(--dur-slow) var(--ease), visibility var(--dur-slow);
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.preloader.is-done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.brand-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-6);
+}
+
+/*
+ * ארבע האותיות יושבות באותה משבצת ברשת, ולכן נראית אות אחת בלבד בכל רגע,
+ * והן רצות ברצף Z · U · Z · A בלולאה.
+ *
+ * שיקולי תאימות — שני כללים נשמרים כאן בקפדנות:
+ *  1. אין var() ואין calc() בתוך מאפייני animation. ספארי נופל על צירוף כזה,
+ *     וכשהוא נופל כל ה-shorthand מתאפס והאותיות קופאות. הזמנים כתובים כערכים
+ *     מפורשים. לשינוי הקצב יש לעדכן את ארבע ההשהיות ואת משך המחזור יחד.
+ *  2. שימוש ב-longhand ולא ב-shorthand, כדי שכשל בהצהרה אחת לא יבטל את השאר.
+ *
+ * משך מחזור 2.2s = 4 אותיות × 0.55s.
+ */
+/*
+ * Yellowtail הוא כתב קליגרפי: הקישוטים של האותיות חורגים הרבה מעבר לתיבת
+ * הגופן. המיכל גדול בכוונה מהאות, עם overflow גלוי, כדי שהקישוט של ה-Z
+ * וזנב ה-A ייראו במלואם ולא ייחתכו.
+ */
+.brand-loader__letters {
+  display: grid;
+  place-items: center;
+  width: clamp(7rem, 34vw, 10rem);
+  height: clamp(6rem, 28vw, 8.5rem);
+  overflow: visible;
+}
+
+.brand-loader__letter {
+  grid-area: 1 / 1;
+  font-family: var(--font-script);
+  font-size: clamp(3.75rem, 19vw, 6rem);
+  /* גובה שורה נדיב — line-height: 1 חתך את ראש האות */
+  line-height: 1.35;
+  padding-inline: 0.12em;
+  color: var(--brand-gold);
+  opacity: 0;
+  animation-name: letter-run;
+  animation-duration: 2.2s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  will-change: opacity, transform;
+}
+
+/* כל אות נכנסת רבע מחזור אחרי קודמתה */
+.brand-loader__letter:nth-child(1) { animation-delay: 0s; }
+.brand-loader__letter:nth-child(2) { animation-delay: 0.55s; }
+.brand-loader__letter:nth-child(3) { animation-delay: 1.1s; }
+.brand-loader__letter:nth-child(4) { animation-delay: 1.65s; }
+
+/*
+ * כל אות תופסת רבע מהמחזור. הכניסה מתחילה ב-0% והיציאה מסתיימת ב-28% —
+ * כלומר יש חפיפה של 3% עם האות הבאה, שמתחילה ב-25%.
+ * החפיפה מכוונת: בגרסה הקודמת האות נעלמה ב-25% והבאה הופיעה רק ב-33%,
+ * ונוצר רגע שבו המסך היה ריק לגמרי. זה מה שנראה כאילו האותיות לא מוצגות.
+ */
+@keyframes letter-run {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.9);
+  }
+  5% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  22% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  28% {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0) scale(0.94);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0) scale(0.94);
+  }
+}
+
+/* ארבעה מעוינים המסמנים את מיקום האות ברצף, באותו תזמון */
+.brand-loader__dots {
+  display: flex;
+  gap: var(--sp-3);
+  direction: ltr;
+}
+
+.brand-loader__dot {
+  width: 5px;
+  height: 5px;
+  background: var(--brand-gold);
+  transform: rotate(45deg);
+  opacity: 0.25;
+  animation-name: dot-run;
+  animation-duration: 2.2s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+.brand-loader__dot:nth-child(1) { animation-delay: 0s; }
+.brand-loader__dot:nth-child(2) { animation-delay: 0.55s; }
+.brand-loader__dot:nth-child(3) { animation-delay: 1.1s; }
+.brand-loader__dot:nth-child(4) { animation-delay: 1.65s; }
+
+@keyframes dot-run {
+  0%, 28%, 100% { opacity: 0.25; transform: rotate(45deg) scale(1); }
+  5%, 22% { opacity: 1; transform: rotate(45deg) scale(1.45); }
+}
+
+/*
+ * מצב גיבוי: אם הדפדפן לא הפעיל את האנימציה (אירוע animationstart לא נורה),
+ * JavaScript מוסיף is-js ומחליף את האותיות בעצמו. כך הרצף רץ גם אם
+ * אנימציות CSS חסומות בהגדרות הדפדפן או במצב חיסכון בסוללה.
+ */
+.brand-loader.is-js .brand-loader__letter,
+.brand-loader.is-js .brand-loader__dot {
+  animation: none;
+}
+
+.brand-loader.is-js .brand-loader__letter {
+  opacity: 0;
+  transform: none;
+  transition: opacity 220ms ease-out;
+}
+
+.brand-loader.is-js .brand-loader__letter.is-active {
+  opacity: 1;
+}
+
+.brand-loader.is-js .brand-loader__dot {
+  opacity: 0.25;
+  transition: opacity 220ms ease;
+}
+
+.brand-loader.is-js .brand-loader__dot.is-active {
+  opacity: 1;
+}
+
+.brand-loader__caption {
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--brand-gold-400);
+  opacity: 0.85;
+}
+
+/* גרסה קטנה — לטעינה בתוך שלב או כפתור */
+.brand-loader--inline {
+  gap: var(--sp-4);
+}
+
+.brand-loader--inline .brand-loader__letters {
+  width: 4.5rem;
+  height: 4rem;
+}
+
+.brand-loader--inline .brand-loader__letter {
+  font-size: 2.5rem;
+  color: var(--accent);
+}
+
+.brand-loader--inline .brand-loader__caption {
+  color: var(--text-subtle);
+}
+
+/*
+ * הפחתת תנועה: הרצף נשמר — מחוון טעינה שאינו זז אינו מחוון טעינה —
+ * אבל ההחלפה היא הצללה בלבד, בלי הזזה או שינוי גודל, ובקצב איטי יותר.
+ * ה-!important נדרש כדי לגבור על הכלל הגורף שב-base.css.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .brand-loader__letter {
+    animation-name: letter-fade !important;
+    animation-duration: 3.2s !important;
+    animation-iteration-count: infinite !important;
+    transform: none !important;
+  }
+
+  .brand-loader__letter:nth-child(2) { animation-delay: 0.8s !important; }
+  .brand-loader__letter:nth-child(3) { animation-delay: 1.6s !important; }
+  .brand-loader__letter:nth-child(4) { animation-delay: 2.4s !important; }
+
+  .brand-loader__dot {
+    animation: none !important;
+    opacity: 0.4;
+  }
+}
+
+@keyframes letter-fade {
+  0%, 28%, 100% { opacity: 0; }
+  5%, 22% { opacity: 1; }
+}
+
+/* ------------------------------------------------------- מצב ריק -- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-12) var(--sp-5);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-state__mark {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: var(--font-script);
+  font-size: 1.75rem;
+  line-height: 1;
+  padding-block-end: 6px;
+}
+
+.empty-state__title {
+  font-size: var(--fs-lg);
+  font-weight: 300;
+  color: var(--text);
+}
+
+.empty-state__text {
+  max-width: 34ch;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+
+.empty-state .btn {
+  margin-block-start: var(--sp-1);
+}
