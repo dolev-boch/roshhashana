@@ -347,7 +347,7 @@ export function initCheckout({ onComplete } = {}) {
 
       el('p', {
         class: 'field__hint',
-        text: 'התשלום מתבצע במעמד האיסוף. נאשר את ההזמנה בהודעה חוזרת.',
+        text: 'נהיה איתכם בקשר טלפוני לתשלום ההזמנה',
       }),
     ]);
   }

@@ -122,7 +122,7 @@ function doGet() {
 
 function json(payload) {
   return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
-    ContentService.MimeType.JSON,
+    ContentService.MimeType.JSON
   );
 }
 
@@ -238,15 +238,27 @@ function frameOrder(sheet, firstRow, numRows, numCols) {
 
   // מסגרת חיצונית עבה סביב ההזמנה כולה
   range.setBorder(
-    true, true, true, true, null, null,
-    '#1B2520', SpreadsheetApp.BorderStyle.SOLID_MEDIUM,
+    true,
+    true,
+    true,
+    true,
+    null,
+    null,
+    '#1B2520',
+    SpreadsheetApp.BorderStyle.SOLID_MEDIUM
   );
 
   // קווים דקים בין הפריטים בתוך אותה הזמנה
   if (numRows > 1) {
     range.setBorder(
-      null, null, null, null, null, true,
-      '#CDC0AA', SpreadsheetApp.BorderStyle.DOTTED,
+      null,
+      null,
+      null,
+      null,
+      null,
+      true,
+      '#CDC0AA',
+      SpreadsheetApp.BorderStyle.DOTTED
     );
   }
 }
@@ -507,7 +519,7 @@ function sendCustomerEmail(order) {
     '<p style="margin:22px 0 0;font-size:13px;color:#6d7367;line-height:1.7;">' +
     'מספר הזמנה ' +
     escapeHtml(order.reference) +
-    ' · התשלום במעמד האיסוף.<br>' +
+    ' · נהיה איתכם בקשר טלפוני לתשלום ההזמנה.<br>' +
     'לשינוי או ביטול נא ליצור קשר בטלפון ' +
     phoneLink() +
     '.</p>';
@@ -515,7 +527,7 @@ function sendCustomerEmail(order) {
   sendMail(
     order.customer.email,
     'אישור הזמנה · ' + CONFIG.CAMPAIGN,
-    emailShell('תודה על ההזמנה', body),
+    emailShell('תודה על ההזמנה', body)
   );
 }
 
@@ -561,7 +573,7 @@ function sendOwnerEmail(order, orderCount) {
   sendMail(
     CONFIG.OWNER_EMAIL,
     order.customer.fullName + ' הזמין לראש השנה 2026',
-    emailShell('הזמנה חדשה מהאתר', body),
+    emailShell('הזמנה חדשה מהאתר', body)
   );
 }
 
