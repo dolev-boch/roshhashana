@@ -77,9 +77,9 @@ function head(product) {
       product.note ? el('span', { class: 'menu-item__note', text: product.note }) : null,
     ]),
     el('span', { class: 'menu-item__leader', 'aria-hidden': 'true' }),
-    el('span', { class: 'menu-item__price' }, [
-      el('span', { text: String(product.price) }),
+    el('span', { class: 'menu-item__price num' }, [
       el('span', { class: 'currency', text: CONFIG.ui.currency }),
+      el('span', { text: String(product.price) }),
     ]),
   ]);
 }

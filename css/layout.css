@@ -538,6 +538,11 @@
   border-block-end: 1px dotted var(--border-dotted);
 }
 
+/*
+ * direction: ltr + unicode-bidi: isolate (המחלקה .num) מבטיחים שסימן
+ * המטבע יישאר תמיד משמאל למספר: בלי בידוד, שני span סמוכים בתוך עמוד
+ * RTL הוצגו הפוך — המספר משמאל והסימן מימין לו.
+ */
 .menu-item__price {
   flex: none;
   font-size: var(--fs-lg);
@@ -547,7 +552,7 @@
 }
 
 .menu-item__price .currency {
-  margin-inline-start: 0.15em;
+  margin-inline-end: 0.15em;
   font-size: 0.72em;
   color: var(--text-muted);
 }
@@ -1789,11 +1794,13 @@ body.orders-closed .hero__cta .btn--outline-inverse {
 }
 
 /*
- * בהפחתת תנועה ההחלפה נמשכת אך ללא הצללה הדרגתית — התמונה מתחלפת מיידית.
+ * בהפחתת תנועה ההצללה מתקצרת ואינה מבוטלת לגמרי: קיפאון מוחלט בין
+ * תמונות היה נראה כמו תקלה ("זה בכלל מתחלף?"), ודעיכת opacity פשוטה
+ * אינה תנועה שמפעילה רגישות וסטיבולרית כמו הזזה או זום.
  * ביטול ההחלפה לגמרי היה משאיר תמונה קפואה; מי שרוצה לעצור לוחץ על ההשהיה.
  */
 @media (prefers-reduced-motion: reduce) {
   .slideshow__slide {
-    transition: none;
+    transition-duration: 200ms;
   }
 }
