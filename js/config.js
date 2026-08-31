@@ -10,32 +10,32 @@
 export const CONFIG = Object.freeze({
   /* ---------------------------------------------------------------- עסק -- */
   business: {
-    name: 'Zuza Patisserie',
-    nameHe: 'זוזה פטיסרי',
-    tagline: 'קונדיטוריה בוטיק',
-    phone: '04-8422355',
+    name: "Zuza Patisserie",
+    nameHe: "זוזה פטיסרי",
+    tagline: "קונדיטוריה בוטיק",
+    phone: "04-8422355",
     /** מספר וואטסאפ בפורמט בינלאומי, ללא סימנים. 972 + המספר ללא ה-0 המוביל */
-    whatsapp: '972523063700',
-    whatsappDisplay: '052-3063700',
-    email: '',
-    address: '',
+    whatsapp: "972523063700",
+    whatsappDisplay: "052-3063700",
+    email: "",
+    address: "",
   },
 
   /* ------------------------------------------------------------ קמפיין -- */
   campaign: {
-    title: 'הזמנות לראש השנה',
-    year: '2026',
+    title: "הזמנות לראש השנה",
+    year: "2026",
     hebrewYear: 'תשפ"ז',
-    subtitle: 'קולקציית חג חגיגית, אלגנטית ומתוקה במיוחד לשולחן ראש השנה',
+    subtitle: "קולקציית חג חגיגית, אלגנטית ומתוקה במיוחד לשולחן ראש השנה",
     /** תאריך אחרון לקליטת הזמנות (כולל). ISO: YYYY-MM-DD */
-    ordersCloseOn: '2026-09-09',
+    ordersCloseOn: "2026-09-09",
   },
 
   /* -------------------------------------------------------------- איסוף -- */
   pickup: {
     /** מועד האיסוף. אחיד לכל ההזמנות. */
-    date: '2026-09-11',
-    dateDisplay: '11/09/26',
+    date: "2026-09-11",
+    dateDisplay: "11/09/26",
 
     /**
      * סניפי האיסוף. הלקוח בוחר סניף בשלב 2 של ההזמנה.
@@ -43,25 +43,25 @@ export const CONFIG = Object.freeze({
      */
     branches: [
       {
-        id: 'kinneret',
-        name: 'סניף כנרת קבוצה',
-        address: 'קבוצת כנרת',
-        hours: '08:00–14:00',
-        wazeLabel: 'זוזה פטיסרי, כנרת (קבוצה)',
-        waze: 'https://waze.com/ul/hsvc6172vf',
+        id: "kinneret",
+        name: "סניף כנרת קבוצה",
+        address: "קבוצת כנרת",
+        hours: "08:00–14:00",
+        wazeLabel: "זוזה פטיסרי, כנרת (קבוצה)",
+        waze: "https://waze.com/ul/hsvc6172vf",
       },
       {
-        id: 'tiberias',
-        name: 'סניף טבריה',
+        id: "tiberias",
+        name: "סניף טבריה",
         address: "רח' הבנים 35 · הגן הארכיאולוגי",
-        hours: '08:30–14:00',
+        hours: "08:30–14:00",
         wazeLabel: "זוזה פטיסרי, סניף טבריה רח' הבנים 35 - הגן הארכיאולוגי",
-        waze: 'https://waze.com/ul/hsvc68b2te',
+        waze: "https://waze.com/ul/hsvc68b2te",
       },
     ],
 
-    intro: 'בעת ההזמנה בחרו את הסניף שלכם לאיסוף המתוקים לחג',
-    otherDateNote: 'לאיסוף בתאריך אחר',
+    intro: "בעת ההזמנה בחרו את הסניף שלכם לאיסוף המתוקים לחג",
+    otherDateNote: "לאיסוף בתאריך אחר",
   },
 
   /* --------------------------------------------------------- שליחת הזמנה -- */
@@ -73,7 +73,7 @@ export const CONFIG = Object.freeze({
      * 'webhook'  - POST רגיל ל-endpoint כלשהו (Formspree וכדומה).
      * 'both'     - שולח לגיליון וגם מציע שליחה בוואטסאפ.
      */
-    mode: 'sheets',
+    mode: "sheets",
 
     /**
      * כתובת ה-Web App של Google Apps Script.
@@ -81,10 +81,11 @@ export const CONFIG = Object.freeze({
      * הנחיות מלאות ב-google-apps-script/README.md
      * דוגמה: 'https://script.google.com/macros/s/AKfyc.../exec'
      */
-    endpoint: '',
+    endpoint:
+      "https://script.google.com/macros/s/AKfycbxnx-qS2B4ywIhJm7V7zh0ARRsGHTcfLI24aDNyD8INRSf0_rfBqQNEdxgtBnF7Y_4/exec",
 
     /** ל-mode: 'webhook' בלבד */
-    webhookUrl: '',
+    webhookUrl: "",
 
     /**
      * Apps Script אינו מחזיר כותרות CORS, ולכן הבקשה נשלחת כ-no-cors:
@@ -94,17 +95,17 @@ export const CONFIG = Object.freeze({
     useNoCors: true,
 
     /** קידומת למספר ההזמנה המוצג ללקוח */
-    orderPrefix: 'ZZ',
+    orderPrefix: "ZZ",
 
     /** כתובת הגיליון — מוצגת במייל לבעלי העסק */
     sheetUrl:
-      'https://docs.google.com/spreadsheets/d/1x4YwfFiLBF0781T68flFWqvckdQ2wBr--dbekqlwclg/edit',
+      "https://docs.google.com/spreadsheets/d/1x4YwfFiLBF0781T68flFWqvckdQ2wBr--dbekqlwclg/edit",
   },
 
   /* -------------------------------------------------------------- תצוגה -- */
   ui: {
-    currency: '₪',
-    locale: 'he-IL',
+    currency: "₪",
+    locale: "he-IL",
     /** מקסימום יחידות למוצר בעגלה */
     maxQtyPerItem: 20,
     /**
@@ -115,7 +116,7 @@ export const CONFIG = Object.freeze({
      */
     minPreloaderMs: 2400,
     /** מפתח שמירת העגלה בדפדפן */
-    storageKey: 'zuza:cart:v1',
+    storageKey: "zuza:cart:v1",
   },
 
   /* -------------------------------------------------------------- תמונות -- */
@@ -125,11 +126,11 @@ export const CONFIG = Object.freeze({
      * ייחשב ל-public id ב-Cloudinary ויורכב לכתובת מלאה אוטומטית.
      * דוגמה: 'https://res.cloudinary.com/YOUR_CLOUD/image/upload'
      */
-    cloudinaryBase: '',
+    cloudinaryBase: "",
     /** טרנספורמציה שתוזרק לכתובות Cloudinary (איכות ופורמט אוטומטיים) */
-    cloudinaryTransform: 'f_auto,q_auto,c_fill,g_auto,ar_4:5,w_800',
+    cloudinaryTransform: "f_auto,q_auto,c_fill,g_auto,ar_4:5,w_800",
     /** תיקיית התמונות המקומית */
-    productsDir: 'assets/images/products',
+    productsDir: "assets/images/products",
 
     /**
      * זיהוי אוטומטי לפי שם הקובץ.
@@ -143,7 +144,7 @@ export const CONFIG = Object.freeze({
      * תירשם שגיאת 404 בקונסול ותוצג תמונת ברירת המחדל. זו התנהגות תקינה.
      */
     autoByProductId: true,
-    defaultExtension: 'jpg',
+    defaultExtension: "jpg",
 
     /**
      * תמונות אווירה רחבות, המשולבות כרצועות לאורך העמוד.
@@ -155,21 +156,21 @@ export const CONFIG = Object.freeze({
      */
     gallery: [
       {
-        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0554-36_msqdta.jpg',
-        alt: 'שולחן חג ערוך במאפי הקונדיטוריה',
+        url: "https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0554-36_msqdta.jpg",
+        alt: "שולחן חג ערוך במאפי הקונדיטוריה",
       },
       {
-        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0436-14_g52oak.jpg',
-        alt: 'מבחר מתוקים לראש השנה',
+        url: "https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111816/IMG_0436-14_g52oak.jpg",
+        alt: "מבחר מתוקים לראש השנה",
       },
       {
-        url: 'https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111815/IMG_0430-12_d2xak0.jpg',
-        alt: 'פינת הגשה בקונדיטוריה',
+        url: "https://res.cloudinary.com/dcsbe4ad8/image/upload/v1788111815/IMG_0430-12_d2xak0.jpg",
+        alt: "פינת הגשה בקונדיטוריה",
       },
     ],
 
     /** תמונת ברירת מחדל כאשר למוצר אין תמונה או שהטעינה נכשלה */
-    placeholder: 'assets/images/products/placeholder.svg',
+    placeholder: "assets/images/products/placeholder.svg",
 
     /**
      * רוחבים שייווצרו ב-srcset עבור תמונות Cloudinary.
