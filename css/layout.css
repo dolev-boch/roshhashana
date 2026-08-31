@@ -1649,31 +1649,36 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   border-block-end: 1px solid var(--frame);
 }
 
+/*
+ * הגובה גדל משמעותית: ברצועה נמוכה מדי לא היה אפשר להבין מה מופיע בצילום.
+ * aspect-ratio קובע את הצורה, ו-max-height מונע ממנה להפוך לבאנר
+ * שתופס מסך שלם במסכים רחבים.
+ */
 .slideshow__frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 240px;
+  aspect-ratio: 4 / 3;
+  max-height: 62vh;
   overflow: hidden;
 }
 
-@supports not (aspect-ratio: 16 / 9) {
+@supports not (aspect-ratio: 4 / 3) {
   .slideshow__frame {
-    height: 240px;
+    height: 60vw;
+    max-height: 62vh;
   }
 }
 
 @media (min-width: 34em) {
   .slideshow__frame {
-    aspect-ratio: 21 / 9;
-    max-height: 300px;
+    aspect-ratio: 16 / 9;
+    max-height: 440px;
   }
 }
 
 @media (min-width: 62em) {
   .slideshow__frame {
-    aspect-ratio: 24 / 9;
-    max-height: 340px;
+    max-height: 540px;
   }
 }
 
@@ -1705,17 +1710,54 @@ body.orders-closed .hero__cta .btn--outline-inverse {
 }
 
 /* מחווני מיקום, גם כשליטה ידנית */
-.slideshow__dots {
+/* שורת השליטה: מחוונים והשהיה, על גרדיאנט שמבטיח ניגודיות מעל כל תמונה */
+.slideshow__controls {
   position: absolute;
-  inset-block-end: var(--sp-3);
+  inset-block-end: 0;
   inset-inline: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-6) var(--sp-4) var(--sp-3);
+  background: linear-gradient(to top, rgba(27, 37, 32, 0.55), transparent);
+}
+
+.slideshow__dots {
+  display: flex;
   gap: var(--sp-2);
   direction: ltr;
 }
 
+.slideshow__pause {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--brand-cream-100);
+  background: rgba(27, 37, 32, 0.5);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.slideshow__pause svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (hover: hover) {
+  .slideshow__pause:hover {
+    background: rgba(27, 37, 32, 0.8);
+  }
+}
+
+.slideshow__pause:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 3px;
+}
+
 .slideshow__dot {
+  position: relative;
   width: 30px;
   height: 3px;
   border-radius: 2px;
@@ -1746,7 +1788,10 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   outline-offset: 4px;
 }
 
-/* בהפחתת תנועה אין החלפה אוטומטית, ולכן גם אין הצללה */
+/*
+ * בהפחתת תנועה ההחלפה נמשכת אך ללא הצללה הדרגתית — התמונה מתחלפת מיידית.
+ * ביטול ההחלפה לגמרי היה משאיר תמונה קפואה; מי שרוצה לעצור לוחץ על ההשהיה.
+ */
 @media (prefers-reduced-motion: reduce) {
   .slideshow__slide {
     transition: none;

@@ -37,6 +37,7 @@ export function buildOrder(cart, customer, pickup) {
       branchName: branch.name ?? '',
       branchHours: branch.hours ?? '',
       branchAddress: branch.address ?? '',
+      branchWaze: branch.waze ?? '',
       /* תיאור מוכן, כדי שהגיליון והמייל לא יצטרכו להרכיב אותו */
       branchFull: describeBranch(branch),
     },

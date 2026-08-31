@@ -66,26 +66,35 @@ function doPost(e) {
 
     const sheets = ensureSheets();
 
-    appendOrderRows(sheets.orders, order);
+    /*
+     * אישור ההזמנה נשלח תמיד — זו הודעה תפעולית על עסקה שהלקוח יזם.
+     * התוצאה נרשמת בגיליון, כך שאפשר לראות בעין אם המייל יצא
+     * בלי לחפש ביומן ההרצות.
+     */
+    let emailStatus = 'נשלח';
+    try {
+      sendCustomerEmail(order);
+    } catch (error) {
+      emailStatus = 'נכשל: ' + String(error.message || error);
+      console.error('customer email failed: ' + error.stack);
+    }
+
+    appendOrderRows(sheets.orders, order, emailStatus);
     rebuildProductionSummary(sheets);
     rebuildRevenueSummary(sheets);
 
     const orderCount = countOrders(sheets.orders);
 
-    /*
-     * כשל במייל לא מבטל הזמנה שכבר נכתבה לגיליון.
-     * אישור ההזמנה נשלח תמיד: זו הודעה תפעולית על עסקה שהלקוח יזם,
-     * ולא דבר פרסומת.
-     */
-    safely(function () {
-      sendCustomerEmail(order);
-    }, 'customer email');
-
     safely(function () {
       sendOwnerEmail(order, orderCount);
     }, 'owner email');
 
-    return json({ ok: true, reference: order.reference, orderCount: orderCount });
+    return json({
+      ok: true,
+      reference: order.reference,
+      orderCount: orderCount,
+      customerEmail: emailStatus,
+    });
   } catch (error) {
     console.error('doPost failed: ' + error.stack);
     return json({ ok: false, error: String(error.message || error) });
@@ -143,6 +152,7 @@ function ensureSheets() {
     'סה"כ שורה',
     'סה"כ הזמנה',
     'הערות',
+    'מייל ללקוח',
   ]);
 
   const production = ensureSheet(book, CONFIG.SHEETS.PRODUCTION, [
@@ -185,7 +195,7 @@ function ensureSheet(book, name, headers) {
  * שורה לכל פריט, כדי שאפשר יהיה לסנן ולסכם לפי מוצר.
  * סכום ההזמנה מופיע בשורה הראשונה של ההזמנה בלבד, כדי לא לנפח סכומים.
  */
-function appendOrderRows(sheet, order) {
+function appendOrderRows(sheet, order, emailStatus) {
   const created = new Date();
   const rows = order.items.map(function (item, index) {
     return [
@@ -203,6 +213,7 @@ function appendOrderRows(sheet, order) {
       item.lineTotal,
       index === 0 ? order.total : '',
       index === 0 ? order.customer.notes || '' : '',
+      index === 0 ? emailStatus : '',
     ];
   });
 
@@ -465,7 +476,14 @@ function sendCustomerEmail(order) {
     '<div style="color:#6d7367;font-size:13px;padding-top:10px;">סניף</div>' +
     '<div style="font-size:16px;padding-top:4px;">' +
     escapeHtml(order.pickup.branchFull || order.pickup.branchName) +
-    '</div></td></tr></table>' +
+    '</div>' +
+    (order.pickup.branchWaze
+      ? '<div style="padding-top:12px;">' +
+        '<a href="' +
+        order.pickup.branchWaze +
+        '" style="color:#a68546;font-size:14px;">פתיחת ניווט לסניף</a></div>'
+      : '') +
+    '</td></tr></table>' +
     itemsTable(order) +
     '<p style="margin:22px 0 0;font-size:13px;color:#6d7367;line-height:1.7;">' +
     'מספר הזמנה ' +
@@ -585,6 +603,7 @@ function runTestOrder() {
       branchName: 'סניף כנרת קבוצה',
       branchHours: '08:00–14:00',
       branchAddress: 'קבוצת כנרת',
+      branchWaze: 'https://waze.com/ul/hsvc6172vf',
       branchFull: 'סניף כנרת קבוצה · קבוצת כנרת · 08:00–14:00',
     },
     items: [
