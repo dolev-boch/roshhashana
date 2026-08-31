@@ -81,7 +81,7 @@ export const CONFIG = Object.freeze({
      * הנחיות מלאות ב-google-apps-script/README.md
      * דוגמה: 'https://script.google.com/macros/s/AKfyc.../exec'
      */
-    endpoint: 'https://script.google.com/macros/s/AKfycbxnx-qS2B4ywIhJm7V7zh0ARRsGHTcfLI24aDNyD8INRSf0_rfBqQNEdxgtBnF7Y_4/exec',
+    endpoint: '',
 
     /** ל-mode: 'webhook' בלבד */
     webhookUrl: '',

@@ -1636,83 +1636,119 @@ body.orders-closed .hero__cta .btn--outline-inverse {
   color: var(--accent);
 }
 
-/* ------------------------------------------------------ רצועות אווירה -- */
+/* ------------------------------------------------------ גלריית אווירה -- */
 
 /*
- * רצועת תמונה רחבה. היחס משתנה לפי רוחב המסך ותואם ל-<source>
- * שנבנה ב-gallery.js: 4:3 בטלפון, 16:9 בטאבלט, 21:9 במסך רחב.
- * צילום 21:9 בטלפון היה הופך לפס דק שאי אפשר לזהות בו דבר.
+ * רצועה רחבה וצרה בראש העמוד. הגובה מוגבל ב-max-height כדי שהיא תישאר
+ * רצועה קולנועית ולא באנר שתופס מסך שלם: aspect-ratio קובע את הצורה,
+ * ו-max-height מונע ממנה לגדול יתר על המידה במסכים רחבים.
  */
-.atmos {
+.slideshow {
+  position: relative;
+  background: var(--brand-forest);
+  border-block-end: 1px solid var(--frame);
+}
+
+.slideshow__frame {
   position: relative;
   width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 240px;
   overflow: hidden;
-  background: var(--surface-sunken);
-  border-block: 1px solid var(--hairline);
 }
 
-.atmos__frame {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-}
-
-@supports not (aspect-ratio: 4 / 3) {
-  .atmos__frame {
-    height: 0;
-    padding-block-end: 75%;
-    position: relative;
+@supports not (aspect-ratio: 16 / 9) {
+  .slideshow__frame {
+    height: 240px;
   }
-
-  .atmos__frame .atmos__img {
-    position: absolute;
-    inset: 0;
-  }
-}
-
-.atmos__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 @media (min-width: 34em) {
-  .atmos__frame {
-    aspect-ratio: 16 / 9;
-  }
-
-  @supports not (aspect-ratio: 16 / 9) {
-    .atmos__frame {
-      padding-block-end: 56.25%;
-    }
+  .slideshow__frame {
+    aspect-ratio: 21 / 9;
+    max-height: 300px;
   }
 }
 
 @media (min-width: 62em) {
-  .atmos__frame {
-    aspect-ratio: 21 / 9;
-  }
-
-  @supports not (aspect-ratio: 21 / 9) {
-    .atmos__frame {
-      padding-block-end: 42.85%;
-    }
+  .slideshow__frame {
+    aspect-ratio: 24 / 9;
+    max-height: 340px;
   }
 }
 
 /*
- * רצועה שיושבת בתוך מכולת התפריט אך נפרשת לרוחב המסך המלא.
- * החישוב עובד בשני כיווני כתיבה, ו-overflow-x: hidden על ה-body
- * מונע גלילה אופקית כשקיים פס גלילה אנכי.
+ * כל התמונות מונחות זו על זו, ורק הפעילה גלויה.
+ * מעבר ההצללה מונע קפיצה בין תמונות בגדלים שונים.
  */
-.atmos--bleed {
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
-  margin-block: var(--section-y);
+.slideshow__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms ease-in-out;
 }
 
-/* המרווח סביב הרצועות שמחוץ למכולה */
-[data-band] .atmos {
-  margin-block: 0;
+.slideshow__slide.is-active {
+  opacity: 1;
+}
+
+.slideshow__slide picture,
+.slideshow__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.slideshow__img {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* מחווני מיקום, גם כשליטה ידנית */
+.slideshow__dots {
+  position: absolute;
+  inset-block-end: var(--sp-3);
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+  direction: ltr;
+}
+
+.slideshow__dot {
+  width: 30px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(251, 247, 241, 0.4);
+  transition: background-color var(--dur) var(--ease);
+}
+
+/* יעד המגע גדול מהמחוון הנראה, בלי להגדיל אותו ויזואלית */
+.slideshow__dot::before {
+  content: '';
+  position: absolute;
+  inset-block: -14px;
+  inset-inline: -4px;
+}
+
+.slideshow__dot.is-active {
+  background: var(--brand-gold);
+}
+
+@media (hover: hover) {
+  .slideshow__dot:hover {
+    background: var(--brand-gold-400);
+  }
+}
+
+.slideshow__dot:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 4px;
+}
+
+/* בהפחתת תנועה אין החלפה אוטומטית, ולכן גם אין הצללה */
+@media (prefers-reduced-motion: reduce) {
+  .slideshow__slide {
+    transition: none;
+  }
 }
