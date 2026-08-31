@@ -40,6 +40,9 @@ const CONFIG = {
   CAMPAIGN: 'ראש השנה 2026',
   CURRENCY: '₪',
 
+  /** טלפון העסק, כפי שמוצג באתר (js/config.js) — לתצוגה ולקישור חיוג במיילים */
+  PHONE: '04-8422355',
+
   /** שמות הגיליונות. שינוי כאן ייצור גיליון חדש בשם החדש. */
   SHEETS: {
     ORDERS: 'הזמנות',
@@ -392,6 +395,20 @@ function money(amount) {
   return CONFIG.CURRENCY + Number(amount).toLocaleString('he-IL');
 }
 
+/**
+ * טלפון העסק כקישור חיוג — נגיעה מחייגת ישירות, בלי צורך להעתיק.
+ * אותה מוסכמת tel: כמו באתר (js/app.js): הספרות בלבד, בלי מקף או קידומת.
+ */
+function phoneLink() {
+  return (
+    '<a href="tel:' +
+    CONFIG.PHONE.replace(/\D/g, '') +
+    '" style="color:inherit;text-decoration:none;">' +
+    CONFIG.PHONE +
+    '</a>'
+  );
+}
+
 function escapeHtml(value) {
   return String(value == null ? '' : value)
     .replace(/&/g, '&amp;')
@@ -451,7 +468,9 @@ function emailShell(title, bodyHtml) {
     bodyHtml +
     '</td></tr>' +
     '<tr><td style="padding:16px 26px;background:#f6efe7;border-top:1px solid #e4dccf;' +
-    'text-align:center;font-size:12px;color:#6d7367;">זוזה פטיסרי · 04-8422355</td></tr>' +
+    'text-align:center;font-size:12px;color:#6d7367;">זוזה פטיסרי · ' +
+    phoneLink() +
+    '</td></tr>' +
     '</table></div>'
   );
 }
@@ -489,7 +508,9 @@ function sendCustomerEmail(order) {
     'מספר הזמנה ' +
     escapeHtml(order.reference) +
     ' · התשלום במעמד האיסוף.<br>' +
-    'לשינוי או ביטול נא ליצור קשר בטלפון 04-8422355.</p>';
+    'לשינוי או ביטול נא ליצור קשר בטלפון ' +
+    phoneLink() +
+    '.</p>';
 
   sendMail(
     order.customer.email,
