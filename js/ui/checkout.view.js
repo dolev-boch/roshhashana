@@ -69,7 +69,17 @@ export function initCheckout({ onComplete } = {}) {
 
   /* ------------------------------------------------------- שלב: פרטים -- */
 
-  function field({ name, label, type = 'text', placeholder, hint, autocomplete, ltr, optional, textarea }) {
+  function field({
+    name,
+    label,
+    type = 'text',
+    placeholder,
+    hint,
+    autocomplete,
+    ltr,
+    optional,
+    textarea,
+  }) {
     const control = textarea
       ? el('textarea', {
           class: 'field__control',
@@ -182,13 +192,18 @@ export function initCheckout({ onComplete } = {}) {
         label: 'הערות להזמנה',
         optional: true,
         textarea: true,
-        placeholder: 'אלרגיות, בקשות מיוחדות או כיתוב על העוגה',
+        placeholder: 'אם יש הערות נוספות ניתן לרשום כאן',
       }),
     ]);
   }
 
   function validateDetails() {
-    const { valid, errors, values } = validate(state.customer, ['fullName', 'phone', 'email', 'notes']);
+    const { valid, errors, values } = validate(state.customer, [
+      'fullName',
+      'phone',
+      'email',
+      'notes',
+    ]);
 
     qsa('[data-field]', body).forEach((wrapper) => {
       const name = wrapper.dataset.field;
@@ -222,7 +237,7 @@ export function initCheckout({ onComplete } = {}) {
     input.addEventListener('change', () => {
       state.pickup.branchId = branch.id;
       qsa('.branch', body).forEach((node) =>
-        node.classList.toggle('is-selected', node.dataset.branch === branch.id),
+        node.classList.toggle('is-selected', node.dataset.branch === branch.id)
       );
       updateFooter();
     });
@@ -242,7 +257,7 @@ export function initCheckout({ onComplete } = {}) {
           branch.address ? el('span', { class: 'branch__address', text: branch.address }) : null,
           el('span', { class: 'branch__hours num', text: branch.hours }),
         ]),
-      ],
+      ]
     );
   }
 
@@ -272,7 +287,7 @@ export function initCheckout({ onComplete } = {}) {
           el('dt', { text: `${item.product.name} × ${item.qty}` }),
           el('dd', { class: 'num', text: money(item.lineTotal) }),
         ]),
-      ]),
+      ])
     );
 
     return el('div', { class: 'review' }, [
@@ -374,8 +389,8 @@ export function initCheckout({ onComplete } = {}) {
             branch.id === order.pickup.branchId
               ? el('span', { class: 'branch-link__tag', text: 'הסניף שבחרתם' })
               : null,
-          ],
-        ),
+          ]
+        )
       ),
     ]);
 
@@ -408,9 +423,7 @@ export function initCheckout({ onComplete } = {}) {
         }),
         el('h3', {
           class: 'success__title',
-          text: result?.ok
-            ? `תודה, ${state.customer.fullName.split(' ')[0]}`
-            : 'משהו השתבש',
+          text: result?.ok ? `תודה, ${state.customer.fullName.split(' ')[0]}` : 'משהו השתבש',
         }),
         el('p', {
           class: 'success__text',
@@ -450,7 +463,13 @@ export function initCheckout({ onComplete } = {}) {
 
     // מחוון טעינה מותגי בזמן השליחה
     const loader = createBrandLoader({ inline: true });
-    render(body, el('div', { class: 'success' }, [loader.node, el('p', { class: 'field__hint', text: 'שולחים את ההזמנה' })]));
+    render(
+      body,
+      el('div', { class: 'success' }, [
+        loader.node,
+        el('p', { class: 'field__hint', text: 'שולחים את ההזמנה' }),
+      ])
+    );
     loader.start();
 
     const [result] = await Promise.all([submitOrder(order), sleep(700)]);
@@ -470,7 +489,10 @@ export function initCheckout({ onComplete } = {}) {
 
   function paintSteps() {
     stepsBar.setAttribute('role', 'list');
-    stepsBar.setAttribute('aria-label', `התקדמות בהזמנה, שלב ${stepIndex + 1} מתוך ${STEPS.length}`);
+    stepsBar.setAttribute(
+      'aria-label',
+      `התקדמות בהזמנה, שלב ${stepIndex + 1} מתוך ${STEPS.length}`
+    );
 
     render(
       stepsBar,
@@ -499,9 +521,9 @@ export function initCheckout({ onComplete } = {}) {
                     ? ' — השלב הנוכחי'
                     : ' — טרם הושלם',
             }),
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 
