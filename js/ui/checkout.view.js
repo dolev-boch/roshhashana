@@ -175,7 +175,7 @@ export function initCheckout({ onComplete } = {}) {
           autocomplete: 'tel',
           placeholder: '0521234567',
           ltr: true,
-          hint: 'נעדכן בהודעה כשההזמנה מוכנה',
+          hint: 'נחייג למספר זה לתשלום ההזמנה',
         }),
         field({
           name: 'email',
