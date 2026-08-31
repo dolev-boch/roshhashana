@@ -83,7 +83,9 @@
 @media (max-width: 40em) {
   .a11y-trigger {
     inset-block-start: auto;
-    inset-block-end: calc(var(--safe-bottom) + var(--sp-3));
+    /* sp-8 ולא sp-3: צמוד מדי לשוליים התחתונים התנגש עם סרגל המחוות
+       של המערכת בחלק מהמכשירים ותחושתו הייתה "שקוע" מדי במסך */
+    inset-block-end: calc(var(--safe-bottom) + var(--sp-8));
     margin-block-start: 0;
     width: 44px;
     height: 44px;
