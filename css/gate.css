@@ -1,0 +1,296 @@
+/* ==========================================================================
+   gate.css — שכבת סגירה חוסמת
+   הודעה על סגירת ההזמנות לראש השנה 2026. חוסמת את האתר כולו:
+   האתר נשאר גלוי ברקע, מעומעם ומטושטש, אך אינו נגיש לשימוש.
+
+   הקובץ עומד בפני עצמו בכוונה — להסרת החסימה בעונה הבאה יש למחוק:
+   1. את הקישור לקובץ זה ב-index.html
+   2. את הבלוק <div class="site-gate"> ואת סקריפט החסימה שאחריו
+   3. את המחלקה is-gated מתגית <html> ואת מאפייני inert שבתגיות הראשיות
+   ========================================================================== */
+
+/* נעילת גלילה. מוגדרת על שני האלמנטים — iOS מתעלם מנעילה על אחד בלבד. */
+.is-gated,
+.is-gated body {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------- הרקע -- */
+
+.site-gate {
+  position: fixed;
+  inset: 0;
+  /* מעל כל שכבה אחרת באתר, כולל מסך הטעינה (400) */
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    calc(var(--sp-5) + var(--safe-top))
+    calc(var(--sp-4) + var(--safe-right))
+    calc(var(--sp-5) + var(--safe-bottom))
+    calc(var(--sp-4) + var(--safe-left));
+  background: rgba(20, 26, 22, 0.74);
+  -webkit-backdrop-filter: blur(9px) saturate(0.85);
+  backdrop-filter: blur(9px) saturate(0.85);
+  /* במסכים נמוכים (נייד לרוחב) התוכן נגלל בתוך השכבה עצמה */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  animation: gate-fade 420ms var(--ease) both;
+}
+
+/* ללא טשטוש — עומק כהה יותר, כדי שהטקסט ישמור על ניגודיות מול הרקע */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .site-gate {
+    background: rgba(20, 26, 22, 0.88);
+  }
+}
+
+/* --------------------------------------------------------------- הפאנל -- */
+
+.site-gate__panel {
+  position: relative;
+  /* margin:auto במקום מרכוז ב-flex בלבד — מונע חיתוך ראש הפאנל בגלילה */
+  margin: auto;
+  width: min(30rem, 100%);
+  padding: clamp(1.75rem, 6vw, 2.75rem) clamp(1.25rem, 5.5vw, 2.5rem);
+  text-align: center;
+  background: var(--brand-forest);
+  border-block-start: 2px solid var(--accent);
+  box-shadow: var(--shadow-xl);
+  animation: gate-rise 560ms var(--ease-out) both;
+}
+
+.site-gate__panel:focus {
+  outline: none;
+}
+
+/* מסגרת הזהב הדקה — אותו ציטוט מהתפריט המודפס שבשאר האתר */
+.site-gate__frame {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid var(--hairline);
+  pointer-events: none;
+}
+
+.site-gate__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+/* --------------------------------------------------------------- לוגו -- */
+
+.site-gate__logo {
+  display: block;
+  width: auto;
+  height: clamp(58px, 15vw, 86px);
+}
+
+.site-gate__logo-fallback {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.site-gate.is-fallback .site-gate__logo {
+  display: none;
+}
+
+.site-gate.is-fallback .site-gate__logo-fallback {
+  display: flex;
+}
+
+.site-gate__logo-word {
+  font-family: var(--font-script);
+  font-size: 3rem;
+}
+
+.site-gate__logo-sub {
+  margin-block-start: 0.4em;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* --------------------------------------------------------------- טקסט -- */
+
+.site-gate__title {
+  font-size: var(--fs-xl);
+  font-weight: 300;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--brand-cream-100);
+}
+
+.site-gate__text {
+  max-width: 24ch;
+  font-size: var(--fs-md);
+  font-weight: 300;
+  line-height: var(--lh-snug);
+  color: var(--text-inverse-muted);
+}
+
+/* ------------------------------------------------------------- טלפון -- */
+
+.site-gate__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+}
+
+.site-gate__label {
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--brand-gold-400);
+}
+
+.site-gate__phone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 54px; /* יעד מגע נוח בנייד */
+  padding: 0.9rem 2rem;
+  max-width: 100%;
+  background: var(--brand-gold);
+  /*
+   * טקסט ירוק-כהה על הזהב, ולא לבן: לבן על זהב נותן יחס ניגודיות 2.7:1
+   * בלבד, מתחת לסף. הירוק נותן 5.9:1 ועומד ב-AA.
+   */
+  color: var(--brand-forest);
+  border: 1px solid var(--brand-gold);
+  border-radius: var(--radius);
+  font-family: var(--font-ui);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.site-gate__phone svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover: hover) {
+  .site-gate__phone:hover {
+    background: var(--brand-gold-600);
+    border-color: var(--brand-gold-600);
+  }
+}
+
+.site-gate__phone:active {
+  transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------- תחתית -- */
+
+.site-gate__foot {
+  font-size: var(--fs-2xs);
+}
+
+.site-gate__foot a {
+  color: var(--text-inverse-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (hover: hover) {
+  .site-gate__foot a:hover {
+    color: var(--brand-gold-400);
+  }
+}
+
+/* --------------------------------------------------- מצבי ניגודיות -- */
+
+/*
+ * הפאנל בנוי מטוקנים, ולכן מצבי הניגודיות של וידג'ט הנגישות מחליפים את
+ * צבעיו מאליהם. נותרו כאן רק החריגים: ביטול הטשטוש (שמנמיך ניגודיות)
+ * והצבעים שבמצב הבהיר היו נופלים על רקע כהה.
+ */
+html.a11y-contrast .site-gate,
+html.a11y-light-contrast .site-gate {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(0, 0, 0, 0.92);
+}
+
+html.a11y-light-contrast .site-gate__phone,
+html.a11y-light-contrast .site-gate__label {
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------- תנועה -- */
+
+@keyframes gate-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes gate-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-gate,
+  .site-gate__panel {
+    animation: none;
+  }
+
+  .site-gate__phone:active {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------- מסכים נמוכים מאוד -- */
+
+/* נייד לרוחב: הלוגו והמרווחים מצטמצמים כדי שהכל ייכנס בלי גלילה */
+@media (max-height: 30em) and (orientation: landscape) {
+  .site-gate {
+    padding-block: var(--sp-3);
+  }
+
+  .site-gate__panel {
+    padding-block: var(--sp-4);
+  }
+
+  .site-gate__inner {
+    gap: var(--sp-3);
+  }
+
+  .site-gate__logo {
+    height: 44px;
+  }
+
+  /* הקו המפריד הוא קישוט בלבד — הוא הראשון לוותר על מקומו */
+  .site-gate .rule {
+    display: none;
+  }
+
+  .site-gate__title {
+    font-size: var(--fs-lg);
+  }
+
+  .site-gate__text {
+    font-size: var(--fs-sm);
+  }
+
+  .site-gate__phone {
+    min-height: 48px;
+    padding-block: 0.7rem;
+  }
+}
